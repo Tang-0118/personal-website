@@ -16,24 +16,31 @@ $site = Split-Path -Parent $here
 $url = "file:///" + ($site -replace '\\', '/') + "/cv.html"
 $shot = Join-Path $site "tools\shot_cdp.cjs"
 $shrink = Join-Path $site "tools\shrink_pdf.py"
+$publish = Join-Path $site "tools\publish_pdf.py"
+$tmp1 = Join-Path $here "_one-page.pdf"
+$tmp2 = Join-Path $here "_two-page.pdf"
 
 Write-Output "[1/3] 读 Word 母版 → 生成网页版在线简历 cv.html"
 python (Join-Path $here "cv_from_docx.py")
 
 Write-Output "[2/3] 导出投递用 PDF（网页排版压成一页）"
 $env:PDF_SCALE = "0.85"
-node $shot $url (Join-Path $here "resume.pdf") 1440 1000 "-" light portrait
+node $shot $url $tmp1 1440 1000 "-" light portrait
 Remove-Item Env:\PDF_SCALE -ErrorAction SilentlyContinue
-python $shrink (Join-Path $here "resume.pdf")
+if ($LASTEXITCODE -ne 0) { throw "生成一页版失败（见上面的 node 报错）" }
+python $shrink $tmp1
+python $publish $tmp1 (Join-Path $here "resume.pdf")
 
 if (-not $SkipTwoPage) {
-    Write-Output "[3/3] 导出未压缩的两页版 resume-web.pdf"
-    node $shot $url (Join-Path $here "resume-web.pdf") 1440 1000 "-" light portrait
-    python $shrink (Join-Path $here "resume-web.pdf")
+    Write-Output "[3/3] 导出未压缩的两页版"
+    node $shot $url $tmp2 1440 1000 "-" light portrait
+    if ($LASTEXITCODE -ne 0) { throw "生成两页版失败（见上面的 node 报错）" }
+    python $shrink $tmp2
+    python $publish $tmp2 (Join-Path $here "resume-web.pdf")
 } else {
-    Write-Output "[3/3] 已跳过 resume-web.pdf"
+    Write-Output "[3/3] 已跳过两页版"
 }
 
 Write-Output "完成。产出："
-Get-ChildItem -LiteralPath $here -File | Where-Object { $_.Extension -eq ".pdf" } |
+Get-ChildItem -LiteralPath $here -File | Where-Object { $_.Extension -eq ".pdf" -and $_.Name -notlike "_*" } |
     Select-Object Name, @{ n = "KB"; e = { [math]::Round($_.Length / 1KB) } } | Format-Table -AutoSize

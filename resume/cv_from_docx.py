@@ -130,6 +130,9 @@ def parse(docx_path: str) -> dict:
                 current["award"] = body.split("：", 1)[-1]
             elif body.startswith("技术栈"):
                 current["chips"] = chunks_of(body.split("：", 1)[-1])
+            elif not current["desc"] and not current["bullets"]:
+                # 标题下面第一行裸文本 = 一句话简介（写不写「一句话：」都认）
+                current["desc"] = body
             else:
                 head, tail = split_head(body)
                 current["bullets"].append((head, tail))
@@ -189,6 +192,30 @@ def patch_hero(html: str, data: dict) -> str:
     return html
 
 
+def patch_education(html: str, data: dict) -> str:
+    """教育背景那一段（学校 / 时间 / 专业 / GPA / 主修课程）也跟着 Word 走。"""
+    edu = data.get("edu") or {}
+    if not edu.get("org"):
+        return html
+    html = re.sub(r'(<h3 class="entry-title">).*?(</h3>)',
+                  lambda m: m.group(1) + rich(edu["org"]) + m.group(2), html, count=1)
+    if edu.get("date"):
+        html = re.sub(r'(<span class="entry-date">).*?(</span>)',
+                      lambda m: m.group(1) + edu["date"] + m.group(2), html, count=1)
+    if edu.get("sub"):
+        html = re.sub(r'(<p class="entry-sub">).*?(</p>)',
+                      lambda m: m.group(1) + rich(edu["sub"]) + m.group(2), html, count=1)
+    if edu.get("gpa"):
+        html = re.sub(r'(<p class="entry-detail">)(.*?)(</p>)',
+                      lambda m: m.group(1) + "<strong>" + rich(edu["gpa"]) + "</strong>" + m.group(3),
+                      html, count=1)
+    if edu.get("courses"):
+        html = re.sub(r'<p class="entry-detail">主修课程：.*?</p>',
+                      lambda m: '<p class="entry-detail">主修课程：' + rich(edu["courses"]) + "</p>",
+                      html, count=1)
+    return html
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--docx", default=os.path.join(HERE, "resume.docx"))
@@ -198,7 +225,7 @@ def main() -> int:
     data = parse(args.docx)
     apply_to_renderer(data)
     css = cv.clean_css(cv.CSS_SRC.read_text(encoding="utf-8"))
-    html = patch_hero(cv.build_html(css), data)
+    html = patch_education(patch_hero(cv.build_html(css), data), data)
     with open(args.out, "w", encoding="utf-8") as fh:
         fh.write(html)
     print(f"wrote {args.out}  ({len(html)} chars)  "
