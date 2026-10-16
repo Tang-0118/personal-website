@@ -38,6 +38,8 @@ if (-not $SkipWeb) {
     $env:PDF_SCALE = "0.85"
     node (Join-Path $site "tools\shot_cdp.cjs") $url (Join-Path $here "resume.pdf") 1440 1000 "-" light portrait
     Remove-Item Env:\PDF_SCALE -ErrorAction SilentlyContinue
+    Write-Output "    压缩内嵌字体"
+    python (Join-Path $site "tools\shrink_pdf.py") (Join-Path $here "resume.pdf")
 }
 
 Write-Output "完成。产出："
