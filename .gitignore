@@ -1,0 +1,5 @@
+test-results/
+*.zip
+*.log
+.DS_Store
+Thumbs.db
