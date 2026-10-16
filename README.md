@@ -31,11 +31,11 @@ personal-website/
 ├─ assets/
 │  ├─ css/style.css              全部样式与动效（01~10 编号分区）
 │  ├─ js/main.js                 全部交互（1~11 编号分区）
-│  ├─ resume.pdf                 一页版简历 PDF（「下载简历」按钮指向它）
-│  ├─ resume.docx                同内容的可编辑 Word 版（由 resume-work/build_resume.py 生成）
 │  ├─ me.jpg / me-portrait.jpg   首屏方照 / 自我介绍区的竖版照片
 │  ├─ photos/trip-1.jpg          兴趣爱好「旅游」展示位的示例照片
 │  └─ projects/                  四个项目的配图（见「素材来源」）
+├─ resume/                       简历工作区：resume.pdf（下载按钮指向它）/ docx 母版 / 网页版 PDF / 生成脚本
+├─ tools/                        站点工具：截图与打印 PDF、移动端体检、资源链接检查、打包部署 zip
 ├─ preview.png / preview-mobile.png
 └─ README.md
 ```
@@ -148,8 +148,8 @@ personal-website/
 2. **项目时间**：目前用「2026 — 至今」这类年粒度表述，可补充到月份
 3. **专利名称与申请号**：页面只写了「专利在审」，可补充具体名称
 4. **论文状态**：PD-CAT 2026 显示「在审」，录用后可改为「已录用 / 已发表」
-5. **图片瘦身**：`assets/projects/xmesh-*.png` 体积较大，若部署到免费静态托管可再压一次（未使用的 `kit-crop-*.jpg`、`kit-scan.jpg`、`xmesh-quality.png`、`yanbiao-2.jpg`、`seal-ir-*.jpg` 已于 2026-10-15 移出仓库，见 `resume-work\_trash_20261015\`）
-6. **简历同步**：`assets/resume.pdf`（下载按钮给 HR 的那份，一页版）与 `assets/resume.docx`（同内容可编辑版）由 `E:\烟标检测\algo3\resume-work\build_resume.py` 生成，默认出一页精简版，加 `--full` 出两页详细版；再用 `word_to_pdf.ps1` 导出 PDF 并同步进 `assets/`。详细版内容始终保留在网页与在线简历（`cv.html`）里。
+5. **图片瘦身**：`assets/projects/xmesh-*.png` 体积较大，若部署到免费静态托管可再压一次（未使用的几张图已移出仓库，不再占用体积）
+6. **简历同步**：简历的唯一来源是 `resume/`（见 `resume/README.md`）。改完内容跑 `powershell -File resume\build_all.ps1` 会重建 `resume/resume.pdf`（下载按钮指向它）、`resume/resume.docx`、在线简历 `cv.html` 与网页版 `resume/resume-web.pdf`。
 7. **兴趣爱好照片**：目前除「旅游」外都是渐变占位图，换成自己的照片后记得删掉那句「占位图」提示（`.interest__hint`）
 8. **安全防护系统的配图**：`E:\蓝思科技` 里没有界面/现场截图，所以那张卡用的是 CSS 画的「取帧 → 推理 → 判定 → 锁机」链路图（`.media--flow`）；若有实时画面或配置工具截图，替换成真图会更有说服力。
-9. **两张预览图**：`preview.png` / `preview-mobile.png` 由 `resume-work\shot_cdp.cjs` 重新生成（`node shot_cdp.cjs <url> <out.png> <宽> <高> full`，注意用 1440 宽截图再缩到 720，页面最小内容宽度约 876 px）。
+9. **两张预览图**：`preview.png` / `preview-mobile.png` 由 `tools\shot_cdp.cjs` 重新生成（`node tools/shot_cdp.cjs <url> <out.png> <宽> <高> full`，注意用 1440 宽截图再缩到 720，页面最小内容宽度约 876 px；`SHOT_SCALE=2` 出双倍分辨率）。

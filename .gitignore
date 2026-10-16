@@ -3,3 +3,6 @@ test-results/
 *.log
 .DS_Store
 Thumbs.db
+resume/_build-*.docx
+__pycache__/
+*.pyc

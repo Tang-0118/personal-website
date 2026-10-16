@@ -266,7 +266,7 @@
 
   /* ---------------- 10. 简历下载 ---------------- */
   var dl = $('#downloadResume');
-  var RESUME_URL = 'assets/resume.pdf';
+  var RESUME_URL = 'resume/resume.pdf';
   var RESUME_NAME = '陈可欣-简历.pdf';
   if (dl) {
     dl.addEventListener('click', function () {
