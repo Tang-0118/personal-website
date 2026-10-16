@@ -3,6 +3,7 @@ test-results/
 *.log
 .DS_Store
 Thumbs.db
-resume/_*          # 简历工作区的中间产物（_build-one-page.docx、检查用截图等）
+# 简历工作区的中间产物（_build-one-page.docx、检查用截图等）
+resume/_*
 __pycache__/
 *.pyc
