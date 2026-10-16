@@ -11,9 +11,11 @@ from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
 
 HERE = os.path.dirname(os.path.abspath(__file__)) if "__file__" in globals() else r"E:\github_projects\personal-website\resume"
-SRC = os.path.join(HERE, "resume.docx")          # 可编辑母版（同时充当排版模板）
-OUT = os.path.join(HERE, "_build-one-page.docx")  # 默认：一页精简版（投递用）
-OUT_FULL = os.path.join(HERE, "_build-two-page.docx")  # --full：两页详细版
+# resume.docx 是「手动编辑的母版」，本脚本不会覆盖它：
+# 它只把内容生成成 _from-code.docx（草稿）供比对/取用，需要时自己另存为 resume.docx。
+SRC = os.path.join(HERE, "resume.docx")            # 排版模板 + 母版
+OUT = os.path.join(HERE, "_from-code.docx")        # 默认：代码生成的一页精简版草稿
+OUT_FULL = os.path.join(HERE, "_from-code-full.docx")  # --full：两页详细版草稿
 
 FONT = "微软雅黑"
 C_TEXT = "19232D"
