@@ -1071,6 +1071,52 @@ html.lb-open{overflow:hidden}
   }
 }
 
+/* ---------- 10.1 移动端细节修正 ---------- */
+/* 触屏设备：关掉「悬停让位」这类只有鼠标才成立的交互，避免点完 hover 状态粘住 */
+@media (hover:none){
+  .gallery:hover .gphoto:not(:hover){--spread:0px}
+  .ui-main:hover,.ui-thumb:hover{transform:none;box-shadow:var(--shadow-sm)}
+  .media--thermal .thermal:hover img,
+  .media--scan .scan:hover img,
+  .media--figures figure:hover img{transform:none}
+  .media--phones img:nth-child(1):hover{transform:rotate(-5deg) translateY(8px) scale(1)}
+  .media--phones img:nth-child(2):hover{transform:translateY(-8px) scale(1)}
+  .media--phones img:nth-child(3):hover{transform:rotate(5deg) translateY(12px) scale(1)}
+  .project:hover .media--figures .fig-side{transform:none}
+}
+
+/* 触屏上手指比鼠标粗：底部导航与复制按钮留够点按面积 */
+@media (max-width:640px){
+  .copy-btn{padding:11px 17px;font-size:13px}
+  .link-row{padding-block:16px}
+  .chip,.tag{font-size:12px}
+}
+
+/* 安全链路的验收条：窄屏改成上下两行，避免「≤ 200 ms」被拆到两行 */
+@media (max-width:480px){
+  .media--flow .flow__bar{flex-direction:column;align-items:flex-start;gap:3px}
+  .media--flow .flow__bar-v{font-size:12px;white-space:nowrap}
+  .media--flow .flow__hint{font-size:10.5px}
+}
+
+/* 小屏手机（320–380px）：底部胶囊导航整排缩一号，避免左右被裁掉 */
+@media (max-width:380px){
+  .dock{padding:6px;gap:2px;max-width:calc(100vw - 12px)}
+  .dock__item{height:42px;padding:0 8px}
+  .dock__item svg{width:19px;height:19px}
+  .dock__item.is-active{padding-right:8px}
+  .dock__label,.dock__item.is-active .dock__label{display:none}
+  .section{padding-block:64px}
+}
+
+/* 兴趣爱好那摞照片：小屏按比例缩得更小，保证最外侧两张不被切掉 */
+@media (max-width:420px){
+  .gallery{height:126px;transform:scale(.5)}
+}
+@media (max-width:344px){
+  .gallery{height:110px;transform:scale(.44)}
+}
+
 /* ---------- 无障碍：尊重减弱动效偏好 ---------- */
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
