@@ -30,6 +30,7 @@ Remove-Item Env:\PDF_SCALE -ErrorAction SilentlyContinue
 if ($LASTEXITCODE -ne 0) { throw "生成一页版失败（见上面的 node 报错）" }
 python $shrink $tmp1
 python $publish $tmp1 (Join-Path $here "resume.pdf")
+if ($LASTEXITCODE -ne 0) { throw "发布 resume.pdf 失败：关掉正在打开它的 PDF 预览器后重跑本脚本（生成结果还在 $tmp1）" }
 
 if (-not $SkipTwoPage) {
     Write-Output "[3/3] 导出未压缩的两页版"
@@ -37,6 +38,7 @@ if (-not $SkipTwoPage) {
     if ($LASTEXITCODE -ne 0) { throw "生成两页版失败（见上面的 node 报错）" }
     python $shrink $tmp2
     python $publish $tmp2 (Join-Path $here "resume-web.pdf")
+    if ($LASTEXITCODE -ne 0) { throw "发布 resume-web.pdf 失败：关掉正在打开它的 PDF 预览器后重跑本脚本" }
 } else {
     Write-Output "[3/3] 已跳过两页版"
 }
