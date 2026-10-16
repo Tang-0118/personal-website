@@ -267,12 +267,19 @@
   /* ---------------- 10. 简历下载 ---------------- */
   var dl = $('#downloadResume');
   var RESUME_URL = 'assets/resume.pdf';
+  var RESUME_NAME = '陈可欣-简历.pdf';
   if (dl) {
     dl.addEventListener('click', function () {
       fetch(RESUME_URL, { method: 'HEAD' })
         .then(function (r) {
-          if (r.ok) window.open(RESUME_URL, '_blank');
-          else missing();
+          if (!r.ok) { missing(); return; }
+          /* 直接存成中文文件名，省得 HR 下载到一堆 resume.pdf */
+          var a = document.createElement('a');
+          a.href = RESUME_URL;
+          a.download = RESUME_NAME;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
         })
         .catch(missing);
       function missing() {
