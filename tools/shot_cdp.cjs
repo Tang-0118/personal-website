@@ -180,7 +180,8 @@ async function main() {
         marginBottom: 0,
         marginLeft: 0,
         marginRight: 0,
-        scale: 1,
+        // PDF_SCALE<1 → 整页按比例缩小（Chromium 会按 1/scale 加宽布局宽度再缩放，所以仍然铺满页宽）
+        scale: Number(process.env.PDF_SCALE || 1),
       });
       fs.writeFileSync(out, Buffer.from(pdf.data, "base64"));
       console.log("wrote", out, fs.statSync(out).size, "bytes");

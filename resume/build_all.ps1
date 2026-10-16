@@ -1,7 +1,13 @@
-﻿# 一键重建简历：一页版 Word + PDF，在线简历 cv.html，网页版 PDF
+﻿# 一键重建简历
 #
-#   powershell -File resume\build_all.ps1              # 全部重建
-#   powershell -File resume\build_all.ps1 -SkipWeb     # 跳过网页版 PDF（不需要 node）
+#   powershell -File resume\build_all.ps1            # 全部重建
+#   powershell -File resume\build_all.ps1 -SkipWeb   # 跳过需要 node 的两步
+#
+# 产出：
+#   resume.pdf       一页版（网页排版压成一页，网站「下载简历」指向它）
+#   resume.docx      可编辑 Word 母版
+#   resume-word.pdf  Word 排版的一页版（备用样式）
+#   ../cv.html       在线简历
 #
 param([switch]$SkipWeb)
 
@@ -9,28 +15,29 @@ $ErrorActionPreference = "Stop"
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $site = Split-Path -Parent $here
 
-Write-Output "[1/4] 生成 Word 一页版（build_resume.py）"
+Write-Output "[1/4] 生成 Word 一页版"
 python (Join-Path $here "build_resume.py")
 Copy-Item -LiteralPath (Join-Path $here "_build-one-page.docx") -Destination (Join-Path $here "resume.docx") -Force
 
-Write-Output "[2/4] 导出 PDF（Word 转 PDF）"
-$pdf = Join-Path $here "resume.pdf"
+Write-Output "[2/4] 导出 Word 版 PDF（resume-word.pdf）"
+$wordPdf = Join-Path $here "resume-word.pdf"
 try {
-    & (Join-Path $here "word_to_pdf.ps1") -Docx (Join-Path $here "resume.docx") -Pdf $pdf
+    & (Join-Path $here "word_to_pdf.ps1") -Docx (Join-Path $here "resume.docx") -Pdf $wordPdf
 }
 catch {
-    # Word 退出时偶发 COM 报错，PDF 一般已经产出，这里只提示
     Write-Warning "Word 导出时报错（通常是退出阶段的 COM 异常）：$($_.Exception.Message)"
 }
-if (-not (Test-Path -LiteralPath $pdf)) { throw "PDF 没生成：$pdf" }
+if (-not (Test-Path -LiteralPath $wordPdf)) { throw "Word 版 PDF 没生成：$wordPdf" }
 
 Write-Output "[3/4] 重建在线简历 cv.html"
 python (Join-Path $here "build_cv_html.py")
 
 if (-not $SkipWeb) {
-    Write-Output "[4/4] 生成网页版 PDF（打印模式，A4 竖版）"
+    Write-Output "[4/4] 生成下载版：网页排版压成一页 A4（resume.pdf）"
     $url = "file:///" + ($site -replace '\\', '/') + "/cv.html"
-    node (Join-Path $site "tools\shot_cdp.cjs") $url (Join-Path $here "resume-web.pdf") 1440 1000 "-" light portrait
+    $env:PDF_SCALE = "0.85"
+    node (Join-Path $site "tools\shot_cdp.cjs") $url (Join-Path $here "resume.pdf") 1440 1000 "-" light portrait
+    Remove-Item Env:\PDF_SCALE -ErrorAction SilentlyContinue
 }
 
 Write-Output "完成。产出："
