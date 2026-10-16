@@ -266,7 +266,7 @@
 
   /* ---------------- 10. 简历下载 ---------------- */
   var dl = $('#downloadResume');
-  var RESUME_URL = 'assets/resume.docx';
+  var RESUME_URL = 'assets/resume.pdf';
   if (dl) {
     dl.addEventListener('click', function () {
       fetch(RESUME_URL, { method: 'HEAD' })
@@ -276,7 +276,7 @@
         })
         .catch(missing);
       function missing() {
-        toast('还没有放简历文件：把 Word 版存成 assets/resume.docx 即可');
+        toast('还没有放简历文件：把 PDF 存成 assets/resume.pdf 即可');
       }
     });
   }
