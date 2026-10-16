@@ -189,6 +189,22 @@ def patch_hero(html: str, data: dict) -> str:
     gh = re.search(r"GitHub:\s*([\w\-]+)", data["contact"])
     if gh:
         html = re.sub(r"https://github\.com/[\w\-]+", "https://github.com/" + gh.group(1), html)
+    site = re.search(r"主页：\s*([^\s·]+)", data["contact"])
+    if site:
+        url = site.group(1)
+        href = url if url.startswith("http") else "https://" + url.lstrip("/")
+        text = url.replace("https://", "").replace("http://", "").rstrip("/")
+        # 换 href，再换链接文字（保留前面的地球图标）
+        html = re.sub(
+            r'<a class="site-link" href="[^"]*"([^>]*)>',
+            lambda m: '<a class="site-link" href="' + href + '"' + m.group(1) + ">",
+            html, count=1,
+        )
+        html = re.sub(
+            r'(<a class="site-link"[^>]*>(?:.*?</svg>)?)[^<]*(</a>)',
+            lambda m: m.group(1) + text + m.group(2),
+            html, count=1,
+        )
     return html
 
 
