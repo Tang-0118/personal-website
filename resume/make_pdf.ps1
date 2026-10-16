@@ -1,31 +1,39 @@
-﻿# 把手动编辑好的 resume.docx 导出成 resume.pdf（网站「下载简历」用的那份）
+﻿# 改完 Word 母版跑这一条：Word → 网页版在线简历 → 网页排版的 PDF
 #
 #   powershell -File resume\make_pdf.ps1
 #
-# 流程：Word 导出 PDF → 内嵌字体子集化压缩。改完 Word 存盘后跑这一条就行。
-param(
-    [string]$Docx = (Join-Path $PSScriptRoot "resume.docx"),
-    [string]$Pdf = (Join-Path $PSScriptRoot "resume.pdf")
-)
+# 产出：
+#   ../cv.html        在线简历（网页版，https://kexin.uno/cv.html）
+#   resume.pdf        投递用：网页排版压成一页 A4（网站「下载简历」指向它）
+#   resume-web.pdf    同上但未压缩（A4 竖版 2 页，字大一点）
+#
+# 内容全部来自 resume.docx（文字母版）；想重置母版跑 build_master.py。
+param([switch]$SkipTwoPage)
 
 $ErrorActionPreference = "Stop"
-$site = Split-Path -Parent $PSScriptRoot
+$here = $PSScriptRoot
+$site = Split-Path -Parent $here
+$url = "file:///" + ($site -replace '\\', '/') + "/cv.html"
+$shot = Join-Path $site "tools\shot_cdp.cjs"
+$shrink = Join-Path $site "tools\shrink_pdf.py"
 
-if (-not (Test-Path -LiteralPath $Docx)) { throw "找不到 Word 文件：$Docx" }
+Write-Output "[1/3] 读 Word 母版 → 生成网页版在线简历 cv.html"
+python (Join-Path $here "cv_from_docx.py")
 
-Write-Output "[1/2] Word 导出 PDF：$([System.IO.Path]::GetFileName($Docx)) -> $([System.IO.Path]::GetFileName($Pdf))"
-try {
-    & (Join-Path $PSScriptRoot "word_to_pdf.ps1") -Docx $Docx -Pdf $Pdf
+Write-Output "[2/3] 导出投递用 PDF（网页排版压成一页）"
+$env:PDF_SCALE = "0.85"
+node $shot $url (Join-Path $here "resume.pdf") 1440 1000 "-" light portrait
+Remove-Item Env:\PDF_SCALE -ErrorAction SilentlyContinue
+python $shrink (Join-Path $here "resume.pdf")
+
+if (-not $SkipTwoPage) {
+    Write-Output "[3/3] 导出未压缩的两页版 resume-web.pdf"
+    node $shot $url (Join-Path $here "resume-web.pdf") 1440 1000 "-" light portrait
+    python $shrink (Join-Path $here "resume-web.pdf")
+} else {
+    Write-Output "[3/3] 已跳过 resume-web.pdf"
 }
-catch {
-    # Word 退出阶段偶发 COM 报错，PDF 通常已经产出
-    Write-Warning "Word 导出时报错（通常是退出阶段的 COM 异常）：$($_.Exception.Message)"
-}
-if (-not (Test-Path -LiteralPath $Pdf)) { throw "PDF 没生成：$Pdf" }
 
-Write-Output "[2/2] 压缩内嵌字体"
-python (Join-Path $site "tools\shrink_pdf.py") $Pdf
-
-$pages = python -c "import pymupdf,sys; d=pymupdf.open(sys.argv[1]); print(d.page_count)" $Pdf
-Write-Output "完成：$([System.IO.Path]::GetFileName($Pdf))  共 $pages 页，$([math]::Round((Get-Item -LiteralPath $Pdf).Length / 1KB)) KB"
-if ([int]$pages -ne 1) { Write-Warning "注意：现在是 $pages 页，想压成一页就删点内容或缩小字号后重新导出。" }
+Write-Output "完成。产出："
+Get-ChildItem -LiteralPath $here -File | Where-Object { $_.Extension -eq ".pdf" } |
+    Select-Object Name, @{ n = "KB"; e = { [math]::Round($_.Length / 1KB) } } | Format-Table -AutoSize
