@@ -67,7 +67,7 @@ personal-website/
 | --- | --- | --- |
 | 无人车间人形安全防护系统 | YOLOv8 单类人员检测（conf 0.3 / NMS 0.5）、2–4 路 1280×720 相机、latest-frame + 轮询公平调度 + batch=1、ModelFactory 四类推理后端（PyTorch CUDA/CPU · ONNXRuntime · 算能 Sophon NPU）、ROI ON/IN/OUT + 门区短轨迹方向判定、STARTUP/PERSON/FAULT LOCK 安全状态机、心跳超时强制锁机、端到端验收口径 T0 取帧 → T1 继电器写入 ≤ 200 ms、Modbus RTU + DI 软复位、IO 3 次重试 + 死信队列 | `E:\蓝思科技\people_track_nodi_CPU` 运行时（`system/safety_monitor.py`、`AImodel/RealtimeInferenceScheduler.py`、`track/gate_track/`、`system/e2e_latency_tracker.py`、`io_system/`）与 `people_track_config_V2` 配置工具 |
 | 包装袋封口检测 BAGCheck | IR/RGB 双相机同步、OK/NG/UNKNOWN 聚合、IR 量化 7 类指标、MAD 自适应阈值异物检测、动态规划 + RANSAC 封口基准线、配置驱动规则引擎、**NG 图像回看（按状态/时间筛选 + 缺陷浏览/异常统计）**、**逐条结果日志与合格率统计**、证据链与离线回放 | `封口质检系统项目文档.docx`、`项目交接说明.md` |
-| 烟标质检助手（HarmonyOS） | 6 类检测方法、黄金集 17 张图、真机单张 11–75 s、自动化验收 6/6、软著受理号 2026R11L1069227 | App 工程 `README.md`、`docs\算法移植路线.md`、`软著签章.pdf` |
+| 烟标质检助手（HarmonyOS） | 6 类检测方法、测试集 17 张图、真机单张 11–75 s、自动化验收 6/6、软著受理号 2026R11L1069227（**项目已完成真机验收，尚未上线**） | App 工程 `README.md`、`docs\算法移植路线.md`、`软著签章.pdf` |
 | xmesh | 整体 1645.8 s → 1.7 s（约 970×）、`detect_mpi_interfaces` 136.1 s → 0.24 s（569×）、`generate_mesh` 274.0 s → 0.20 s（1362×）、DCU 流水线 3.7–4.5×、雅可比检查最高 12×、64 DCU 弱扩展 4.95 s、I/O 聚合带宽 2161 MB/s、ctest 25/25 | `docs\profiling_2026_06_20.md`、`PDCAT2026_zh_1.md` |
 | 烟标检测算法工具包（已并入「烟标质检助手」条目） | 6 个方法、公共底座（Otsu + 保角点 ROI + SIFT 配准）、1 px ≈ 0.0495 mm、最小物理边长 0.5 mm、全量约 35 s / 单张 | `yanbiao-detector-kit\README.md` |
 
