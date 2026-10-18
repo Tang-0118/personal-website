@@ -32,7 +32,7 @@ personal-website/
 │  ├─ css/style.css              全部样式与动效（01~10 编号分区）
 │  ├─ js/main.js                 全部交互（1~11 编号分区）
 │  ├─ me.jpg / me-portrait.jpg   首屏方照 / 自我介绍区的竖版照片
-│  ├─ photos/trip-1.jpg          兴趣爱好「旅游」展示位的示例照片
+│  ├─ photos/life-*.jpg          兴趣爱好照片墙的五张真实照片（健身 ×2 / 旅游 / 绘画 ×2）
 │  └─ projects/                  四个项目的配图（见「素材来源」）
 ├─ resume/                       简历工作区：resume.pdf（下载按钮指向它）/ docx 母版 / 网页版 PDF / 生成脚本
 ├─ tools/                        站点工具：截图与打印 PDF、移动端体检、资源链接检查、打包部署 zip
@@ -45,7 +45,8 @@ personal-website/
 
 | 文件 | 来源 | 说明 |
 | --- | --- | --- |
-| `me.jpg` / `me-portrait.jpg` / `photos/trip-1.jpg` | `E:\陈可欣\个人照-cut.jpg` | 同一张照片的三种裁切 |
+| `me.jpg` / `me-portrait.jpg` | `E:\陈可欣\个人照-cut.jpg` | 同一张照片的两种裁切 |
+| `photos/life-gym-1/2.jpg`、`life-travel.jpg`、`life-art-1/2.jpg` | 项目根目录 `pictures\` 里的生活照 | 兴趣爱好照片墙用；原图 2000+ px、单张 1–2.6 MB，已按最长边 1400 px、质量 85 压到 50–320 KB |
 | `projects/seal-ir-ok.jpg`、`seal-ir-ng.jpg` | 封口检测项目 `output\samples_showcase\` | 真实红外热成像检测输出（OK / NG）；**页面已不再展示**，2026-10-15 已移出仓库（备份在 `E:\烟标检测\algo3\resume-work\_trash_20261015\site-assets\`） |
 | `projects/yanbiao-1~6.jpg` | 烟标 App 工程根目录真机截图 | 样本库 / 拍摄检测 / 检测详情 / 结果判定 / 检测历史 / 我的 |
 | `projects/seal-ui-realtime.jpg` | 用户提供的软件截图 | 实时检测界面（合格状态）|
@@ -150,6 +151,6 @@ personal-website/
 4. **论文状态**：PD-CAT 2026 显示「在审」，录用后可改为「已录用 / 已发表」
 5. **图片瘦身**：`assets/projects/xmesh-*.png` 体积较大，若部署到免费静态托管可再压一次（未使用的几张图已移出仓库，不再占用体积）
 6. **简历同步**：简历的唯一来源是 `resume/`（见 `resume/README.md`）。改完内容跑 `powershell -File resume\build_all.ps1` 会重建 `resume/resume.pdf`（下载按钮指向它）、`resume/resume.docx`、在线简历 `cv.html` 与网页版 `resume/resume-web.pdf`。
-7. **兴趣爱好照片**：目前除「旅游」外都是渐变占位图，换成自己的照片后记得删掉那句「占位图」提示（`.interest__hint`）
+7. **兴趣爱好照片**：已换成真实照片（`pictures\` 里的原图 → `assets/photos/life-*.jpg`）。想换图：把新图覆盖同名文件，或改 `#gallery` 里 `.gphoto__img` 的 `background-image`；原图目录 `pictures\` 已加入 `.gitignore`，不会被部署。
 8. **安全防护系统的配图**：`E:\蓝思科技` 里没有界面/现场截图，所以那张卡用的是 CSS 画的「取帧 → 推理 → 判定 → 锁机」链路图（`.media--flow`）；若有实时画面或配置工具截图，替换成真图会更有说服力。
 9. **两张预览图**：`preview.png` / `preview-mobile.png` 由 `tools\shot_cdp.cjs` 重新生成（`node tools/shot_cdp.cjs <url> <out.png> <宽> <高> full`，注意用 1440 宽截图再缩到 720，页面最小内容宽度约 876 px；`SHOT_SCALE=2` 出双倍分辨率）。
