@@ -12,6 +12,10 @@
 (function () {
   "use strict";
 
+  // 手机 / 纯触屏设备（主输入是触摸、无悬停）：直接退出，不创建小猫、不跑动画循环
+  var mq = window.matchMedia ? window.matchMedia('(hover: hover)') : null;
+  if (mq && !mq.matches) return;
+
   var Neko = window.Neko;
   var NekoSizeVariations = window.NekoSizeVariations;
   var breedMap = window.nekoBreeds;

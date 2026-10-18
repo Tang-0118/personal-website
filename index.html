@@ -761,27 +761,7 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="assets/js/main.js"></script>
-<script>
-/* 小猫挂件只在支持悬停的宽屏设备加载：手机/触屏不加载，省 289KB 解析和动画开销 */
-(function () {
-  if (!window.matchMedia) return;
-  var mq = window.matchMedia('(hover: hover) and (min-width: 768px)');
-  var loaded = false;
-  var loadNeko = function () {
-    if (loaded || !mq.matches) return;
-    loaded = true;
-    var s1 = document.createElement('script');
-    s1.src = 'assets/js/neko-ts/neko-bundle.js';
-    s1.onload = function () {
-      var s2 = document.createElement('script');
-      s2.src = 'assets/js/neko-site.js';
-      document.body.appendChild(s2);
-    };
-    document.body.appendChild(s1);
-  };
-  loadNeko();
-  if (mq.addEventListener) mq.addEventListener('change', function (e) { if (e.matches) loadNeko(); });
-})();
-</script>
+<script src="assets/js/neko-ts/neko-bundle.js"></script>
+<script src="assets/js/neko-site.js"></script>
 </body>
 </html>
