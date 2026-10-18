@@ -32,7 +32,7 @@ personal-website/
 │  ├─ css/style.css              全部样式与动效（01~10 编号分区）
 │  ├─ js/main.js                 全部交互（1~11 编号分区）
 │  ├─ me.jpg / me-portrait.jpg   首屏方照 / 自我介绍区的竖版照片
-│  ├─ photos/life-*.jpg          兴趣爱好照片墙的五张真实照片（健身 ×2 / 旅游 / 绘画 ×2）
+│  ├─ photos/life-*.jpg          兴趣爱好照片墙的九张真实照片（健身 ×2 / 旅游 ×5 / 绘画 ×2）
 │  └─ projects/                  四个项目的配图（见「素材来源」）
 ├─ resume/                       简历工作区：resume.pdf（下载按钮指向它）/ docx 母版 / 网页版 PDF / 生成脚本
 ├─ tools/                        站点工具：截图与打印 PDF、移动端体检、资源链接检查、打包部署 zip
@@ -46,7 +46,7 @@ personal-website/
 | 文件 | 来源 | 说明 |
 | --- | --- | --- |
 | `me.jpg` / `me-portrait.jpg` | `E:\陈可欣\个人照-cut.jpg` | 同一张照片的两种裁切 |
-| `photos/life-gym-1/2.jpg`、`life-travel.jpg`、`life-art-1/2.jpg` | 项目根目录 `pictures\` 里的生活照 | 兴趣爱好照片墙用；原图 2000+ px、单张 1–2.6 MB，已按最长边 1400 px、质量 85 压到 50–320 KB |
+| `photos/life-gym-1/2.jpg`、`life-travel.jpg`、`life-travel-1..4.jpg`、`life-art-1/2.jpg` | 项目根目录 `pictures\` 里的生活照 | 兴趣爱好照片墙用；原图 2000+ px、单张 1–2.6 MB，已按最长边 1400 px、质量 85 压到 50–400 KB |
 | `projects/seal-ir-ok.jpg`、`seal-ir-ng.jpg` | 封口检测项目 `output\samples_showcase\` | 真实红外热成像检测输出（OK / NG）；**页面已不再展示**，2026-10-15 已移出仓库（备份在 `E:\烟标检测\algo3\resume-work\_trash_20261015\site-assets\`） |
 | `projects/yanbiao-1~6.jpg` | 烟标 App 工程根目录真机截图 | 样本库 / 拍摄检测 / 检测详情 / 结果判定 / 检测历史 / 我的 |
 | `projects/seal-ui-realtime.jpg` | 用户提供的软件截图 | 实时检测界面（合格状态）|
@@ -114,6 +114,17 @@ personal-website/
 
 > 如果某张图不想被点击放大，给它加 `data-no-zoom`（或在 `main.js` 的 `ZOOM_SEL` 里排除该容器即可）。
 
+## 六点六、小猫挂件（本次新增）
+
+页面右下角有一只**跟着鼠标跑的小猫**（经典 oneko 的 TypeScript 移植版 [neko-ts](https://www.npmjs.com/package/neko-ts)，MIT），点击右下角爪印按钮可以给小猫**换花色**（35 种预设），选择会被 `localStorage` 记住，下次打开还是它。
+
+- 挂件入口：`index.html` 末尾的两行 `<script src="assets/js/neko-ts/neko-bundle.js">` + `<script src="assets/js/neko-site.js">`
+- 库文件（完全本地化、无外部 CDN）：`assets/js/neko-ts/neko-bundle.js`（经典脚本，由 neko-ts@0.0.7 的 ESM dist 合并打包，精灵图全部内嵌 base64，可离线运行；`file://` 双击、本地服务器、GitHub Pages 都可用）
+- 想改默认花色：改 `assets/js/neko-site.js` 顶部的 `DEFAULT_BREED`（如 `"marmalade"`）
+- 想删掉挂件：删掉 index.html 里那两行 script 标签，再删掉 `assets/js/neko-site.js` 与 `assets/js/neko-ts/` 整个目录即可
+- 想重新生成 bundle：取回 neko-ts@0.0.7 的 dist（`npm pack neko-ts@0.0.7` 解压），运行 `node tools/build_neko_bundle.mjs <dist目录> assets/js/neko-ts/neko-bundle.js`
+- 系统开启「减弱动态效果」时小猫不会创建，选择器按钮也会自动隐藏（尊重无障碍设置）
+
 ## 七、动效一览
 
 | 效果 | 实现位置 |
@@ -131,6 +142,7 @@ personal-website/
 | **鼠标悬停放大**（图片放大 + 轻微扶正 + 阴影加深） | `.tb-shot:hover`、`.media--thermal .thermal:hover img` 等（08.7 区） |
 | **点击弹出大图**（灯箱，从缩略图位置 FLIP 放大，Esc / 点空白关闭） | `main.js` → 12 + `.lightbox` 样式（08.8 区） |
 | 复制反馈（绿色高亮 + 底部提示条） | `main.js` → 9 |
+| **小猫跟随鼠标 + 换花色面板**（35 种花色，选择记忆） | `assets/js/neko-site.js` + `assets/js/neko-ts/neko-bundle.js` |
 | 鼠标跟随柔光 + 页面光斑漂移 | `.glow` / `.texture` |
 | 流动文字带（悬停暂停） | `.marquee` |
 

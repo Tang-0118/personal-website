@@ -583,7 +583,7 @@ main,.dock{position:relative;z-index:1}
 /* 兴趣爱好照片墙：照参考站 Beyond Design 复刻——方形白边相片压成一条，悬停那张展开到最上层 */
 .gallery{
   position:relative;
-  width:100%;max-width:620px;height:236px;
+  width:100%;max-width:620px;height:500px;
   margin:14px auto 24px;
 }
 .gphoto{
@@ -598,8 +598,10 @@ main,.dock{position:relative;z-index:1}
   transition:transform .6s var(--ease),box-shadow .5s var(--ease),translate .55s var(--ease);
   cursor:zoom-in;touch-action:none;
 }
-/* 鼠标进到这一片：其它照片往两边让一点，被指着的那张放大、压到最上层 */
-.gallery:hover .gphoto:not(:hover){--spread:calc(var(--dir,0) * 16px)}
+/* 鼠标进到这一片：整摞照片自动向两侧散开，按 --i 依次展开；移出后按相反顺序收回 */
+.gallery:hover .gphoto{--spread:var(--push,0px);transition-delay:calc(var(--i,0) * 26ms)}
+.gallery:hover .gphoto:not(:hover){translate:0 -6px}
+.gallery:not(:hover) .gphoto{transition-delay:calc((8 - var(--i,0)) * 26ms)}
 .gphoto:hover{
   --s:1.14;--rot:0deg;z-index:9;translate:0 -10px;
   box-shadow:0 10px 18px rgba(12,19,27,.12),0 36px 60px -30px rgba(12,19,27,.5);
@@ -1043,7 +1045,7 @@ html.lb-open{overflow:hidden}
   .fact:last-child{grid-column:span 2}
   .skill{grid-template-columns:1fr;gap:6px}
   /* 照片墙：移动端整体缩小 */
-  .gallery{height:152px;max-width:none;margin-bottom:18px;transform:scale(.62);transform-origin:center top}
+  .gallery{height:316px;max-width:none;margin-bottom:18px;transform:scale(.62);transform-origin:center top}
   .media--phones{gap:8px}
   .media--phones img{width:31%}
   .media--figures .fig-side{width:100%;align-self:stretch}
@@ -1074,7 +1076,7 @@ html.lb-open{overflow:hidden}
 /* ---------- 10.1 移动端细节修正 ---------- */
 /* 触屏设备：关掉「悬停让位」这类只有鼠标才成立的交互，避免点完 hover 状态粘住 */
 @media (hover:none){
-  .gallery:hover .gphoto:not(:hover){--spread:0px}
+  .gallery:hover .gphoto{--spread:0px;translate:none;transition-delay:0ms}
   .ui-main:hover,.ui-thumb:hover{transform:none;box-shadow:var(--shadow-sm)}
   .media--thermal .thermal:hover img,
   .media--scan .scan:hover img,
@@ -1111,10 +1113,10 @@ html.lb-open{overflow:hidden}
 
 /* 兴趣爱好那摞照片：小屏按比例缩得更小，保证最外侧两张不被切掉 */
 @media (max-width:420px){
-  .gallery{height:126px;transform:scale(.5)}
+  .gallery{height:256px;transform:scale(.5)}
 }
 @media (max-width:344px){
-  .gallery{height:110px;transform:scale(.44)}
+  .gallery{height:226px;transform:scale(.44)}
 }
 
 /* ---------- 无障碍：尊重减弱动效偏好 ---------- */
