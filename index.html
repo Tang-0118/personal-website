@@ -355,20 +355,6 @@
               <figcaption>独立配置工具 V2</figcaption>
             </figure>
           </div>
-          <div class="media media--flow">
-            <ol class="flow">
-              <li><span class="flow__no">01</span><span class="flow__name">多路取流</span><span class="flow__hint">2–4 路 1280×720 工业相机 · 每路只保留最新帧</span></li>
-              <li><span class="flow__no">02</span><span class="flow__name">YOLOv8 人员检测</span><span class="flow__hint">conf 0.3 / NMS 0.5 · batch=1 轮询公平调度</span></li>
-              <li><span class="flow__no">03</span><span class="flow__name">区域与方向判定</span><span class="flow__hint">多边形 ROI ON / IN / OUT · 门区短轨迹状态机</span></li>
-              <li><span class="flow__no">04</span><span class="flow__name">安全状态机</span><span class="flow__hint">STARTUP_LOCK / PERSON_LOCK / FAULT_LOCK / UNLOCK</span></li>
-              <li><span class="flow__no">05</span><span class="flow__name">锁停设备</span><span class="flow__hint">Modbus RTU 继电器输出 · DI 软复位</span></li>
-            </ol>
-            <div class="flow__bar">
-              <span class="flow__bar-t">端到端验收口径</span>
-              <span class="flow__bar-v">T0 取帧 → T1 继电器写入成功 ≤ 200 ms</span>
-            </div>
-          </div>
-          <p class="media__note">按「取帧 → 推理 → 判定 → 锁机」分段统计时延（p95 / p99 与合格率）；任一模块心跳超时都判故障并强制锁机</p>
         </div>
       </div>
     </article>
