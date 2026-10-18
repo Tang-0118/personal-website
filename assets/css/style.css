@@ -611,6 +611,7 @@ main,.dock{position:relative;z-index:1}
   position:relative;width:100%;height:100%;border-radius:19px;overflow:hidden;
   display:grid;place-items:center;background-size:cover;background-position:center;
 }
+img.gphoto__img{object-fit:cover;object-position:center;background:none}
 .gphoto__img span{font-size:clamp(26px,3vw,40px);filter:drop-shadow(0 4px 10px rgba(12,19,27,.22))}
 .gphoto figcaption{
   position:absolute;left:14px;right:14px;bottom:12px;
@@ -1085,6 +1086,14 @@ html.lb-open{overflow:hidden}
   .media--phones img:nth-child(2):hover{transform:translateY(-8px) scale(1)}
   .media--phones img:nth-child(3):hover{transform:rotate(5deg) translateY(12px) scale(1)}
   .project:hover .media--figures .fig-side{transform:none}
+}
+
+/* ---------- 手机端性能：关掉毛玻璃 blur 与固定背景飘动动画（滚动时最耗 GPU） ---------- */
+@media (hover:none),(max-width:640px){
+  .dock,.float-chip,.marquee,.tape,.ui-main__txt,.lightbox{
+    backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  }
+  .texture{animation:none}
 }
 
 /* 触屏上手指比鼠标粗：底部导航与复制按钮留够点按面积 */

@@ -47,6 +47,7 @@ personal-website/
 | --- | --- | --- |
 | `me.jpg` / `me-portrait.jpg` | `E:\陈可欣\个人照-cut.jpg` | 同一张照片的两种裁切 |
 | `photos/life-gym-1/2.jpg`、`life-travel.jpg`、`life-travel-1..4.jpg`、`life-art-1/2.jpg` | 项目根目录 `pictures\` 里的生活照 | 兴趣爱好照片墙用；原图 2000+ px、单张 1–2.6 MB，已按最长边 1400 px、质量 85 压到 50–400 KB |
+| `photos/*-m.jpg` | 由同名照片自动生成 | 手机端小图（最长边 480 px、质量 80，23–51 KB），照片墙 `srcset` 480w 候选，窄屏自动选用；桌面用 `sizes="(max-width:640px) 150px, 520px"` 强制取原图 |
 | `projects/seal-ir-ok.jpg`、`seal-ir-ng.jpg` | 封口检测项目 `output\samples_showcase\` | 真实红外热成像检测输出（OK / NG）；**页面已不再展示**，2026-10-15 已移出仓库（备份在 `E:\烟标检测\algo3\resume-work\_trash_20261015\site-assets\`） |
 | `projects/yanbiao-1~6.jpg` | 烟标 App 工程根目录真机截图 | 样本库 / 拍摄检测 / 检测详情 / 结果判定 / 检测历史 / 我的 |
 | `projects/seal-ui-realtime.jpg` | 用户提供的软件截图 | 实时检测界面（合格状态）|
