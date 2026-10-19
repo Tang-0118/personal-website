@@ -412,10 +412,8 @@ main,.dock{position:relative;z-index:1}
 .project__sub{font-size:15px;color:var(--ink-2);font-weight:500}
 .project__desc{
   font-size:14.5px;color:var(--ink-2);opacity:.92;
-  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;
-  overflow:hidden;
 }
-/* 项目介绍只保留简介态，详细要点不展开占版面 */
+/* 项目介绍完整显示（不再截到 4 行）；详细要点仍隐藏，避免卡片过长 */
 .project__points{display:none}
 .project__points li{position:relative;padding-left:20px;font-size:14px;color:var(--ink-2)}
 .project__points li::before{
