@@ -9,3 +9,5 @@ __pycache__/
 *.pyc
 # 生活照原图（部署用的压缩版在 assets/photos/life-*.jpg）
 pictures/
+# Office 打开文档时生成的临时锁文件
+~$*
