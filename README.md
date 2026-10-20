@@ -1,7 +1,7 @@
 # 陈可欣 · 个人作品集网站
 
 一个可以直接打开使用的单页个人作品集网站，用于**求职 / 实习面试**。
-包含：自我介绍、我的工具箱、作品集（4 个项目）、兴趣爱好、个人简历、联系方式，并提供可编辑 Word 简历下载。
+包含：自我介绍、我的工具箱、作品集（5 个项目）、兴趣爱好、个人简历、联系方式，并提供可编辑 Word 简历下载。
 
 动效与视觉参考了 [xiaoyanghu.com](https://xiaoyanghu.com/) 的设计语言：
 浅色底、左侧玻璃胶囊导航、大圆角卡片、**吸顶堆叠滚动**、滚动逐段浮现。
@@ -33,13 +33,25 @@ personal-website/
 │  ├─ js/main.js                 全部交互（1~11 编号分区）
 │  ├─ me.jpg / me-portrait.jpg   首屏方照 / 自我介绍区的竖版照片
 │  ├─ photos/life-*.jpg          兴趣爱好照片墙的九张真实照片（健身 ×2 / 旅游 ×5 / 绘画 ×2）
-│  └─ projects/                  四个项目的配图（见「素材来源」）
+│  └─ projects/                  五个项目的配图（见「素材来源」）
+├─ yuelu-academy/                岳麓书院 3D 在线漫游子站（纯前端运行文件，不含 45 MB 的 GLB）
 ├─ resume/                       简历工作区：resume.pdf（下载按钮指向它）/ docx 母版 / 网页版 PDF / 生成脚本
 ├─ tools/                        站点工具：截图与打印 PDF、移动端体检、资源链接检查、打包部署 zip
 ├─ preview.png / preview-mobile.png
 └─ README.md
 ```
 
+
+## 二点五、岳麓书院 3D 子站
+
+作品集第 05 张卡片指向同域子站：
+
+- 在线漫游：<https://kexin.uno/yuelu-academy/>
+- 源码仓库：<https://github.com/Tang-0118/Yuelu-academy>
+
+`yuelu-academy/` 只复制了运行所需的前端文件（`index.html`、`css/`、`js/`、`vendor/`），**没有复制 45 MB 的 GLB、截图和开发工具**。页面里的「导出」按钮会在浏览器里即时生成 GLB，所以线上子站不需要预置模型文件，整个子站约 0.9 MB。
+
+子站左下角加了「← 返回作品集」链接，指向本站 `#work`。第 05 张卡片的主预览图、石狮和讲堂室内图存放在 `assets/projects/yuelu-*.jpg`。
 
 ## 三、素材来源（都是真实素材，可直接替换）
 
@@ -58,6 +70,7 @@ personal-website/
 | `projects/xmesh-dcu-scaling.jpg` | `E:\竞赛\PAC\enhanced_results_figures_20260921\fig5_dcu_scaling.png` | 曙光 DCU 扩展性与加速比曲线 |
 | `projects/kit-crop-a.jpg`、`kit-crop-b.jpg` | `E:\yanbiao-detector-kit\output\450956\view.png` | 真实算法输出的缺陷标注图（已裁切放大）；工具包项目卡已撤下，2026-10-15 已移出仓库（备份在 `resume-work\_trash_20261015\site-assets\`） |
 | `projects/xmesh-overview/scaling/quality/terrain.png` | `E:\竞赛\PAC\xmesh_total\figures\figures\*.pdf` | 论文配图，由 PDF 转 PNG（200 dpi） |
+| `projects/yuelu-hero.jpg`、`yuelu-lion.jpg`、`yuelu-interior.jpg` | `E:\Deepseek_projects\yuelu-academy-3d\screenshots` | 岳麓书院 3D 项目预览：全景、门前石狮、讲堂室内；已压到 72–261 KB |
 
 > 若之后重新跑算法或论文更新了配图，把新图覆盖同名文件即可，版式不用改。
 
@@ -84,7 +97,7 @@ personal-website/
 | 左侧信息卡（学校、专业、年级、方向、目标岗位） | `.info-list` 的 `<li>` |
 | 三个数字（2 / 1 / 1） | `.fact__num` 的 `data-count` |
 | **工具箱**（3 个文件夹 + 贴纸） | `#toolbox` 里的 `.toolkit` 是那张大卡片（`aspect-ratio:868/500`，位置全按比例算）；三个文件夹是 `.folder--a / --b / --c`（`left/top/width` + `--rot` 控制摆放与倾斜，`--fx/--fy` 是飞入的起点偏移），口袋里的截图在各自的 `.folder__stack` 里；技术标签是 `.sticker--a1…c3`，只改 `left/top` 和 `--r/--fx/--fy/--dur` 就能挪位置、调漂浮幅度 |
-| **四个项目** | `#workStack` 里的 4 个 `<article class="panel panel--project">`，整块复制或删除即可，堆叠动效会自动适配 |
+| **五个项目** | `#workStack` 里的 5 个 `<article class="panel panel--project">`，整块复制或删除即可，堆叠动效会自动适配；跳转按钮在 `.project__links` |
 | 项目的配图 | `.project__media` 里的 `<img src>`，覆盖 `assets/projects/` 同名文件最省事 |
 | 兴趣爱好（5 个展示位） | `.gallery` 里的 `.gphoto`；把 `background-image` 加在 `.gphoto__img` 上就是真照片，`figcaption` 是手写体说明 |
 | 「最近在看的、在学的」6 张小卡 | `.hobbies` 里的 `.hobby` |

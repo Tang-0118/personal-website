@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>陈可欣 | 个人作品集 · 计算机视觉 / 深度学习</title>
-<meta name="description" content="陈可欣，湖南大学计算机学院智能科学与技术大三在读。研究方向为计算机视觉与深度学习算法落地，参与三个课题组校企合作项目（两个已商用上线）。这里是自我介绍、四个项目、兴趣爱好与个人简历。" />
+<meta name="description" content="陈可欣，湖南大学计算机学院智能科学与技术大三在读。研究方向为计算机视觉与深度学习算法落地，参与三个课题组校企合作项目（两个已商用上线）。这里是自我介绍、五个项目、兴趣爱好与个人简历。" />
 <meta name="theme-color" content="#f7f8fa" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -304,7 +304,7 @@
   <div class="section__head" data-reveal>
     <span class="section__kicker">03</span>
     <h2 class="section__title">作品集</h2>
-    <p class="section__sub">四个项目：车间安全防护、工业视觉质检 × 2 与并行计算竞赛项目。往下滚动，卡片会自动叠起来。</p>
+    <p class="section__sub">五个项目：车间安全防护、工业视觉质检 × 2、并行计算竞赛项目，以及一座可漫游的岳麓书院 3D 场景。往下滚动，卡片会自动叠起来。</p>
   </div>
 
   <div class="stack" id="workStack">
@@ -501,6 +501,67 @@
             <figure class="fig-side"><img src="assets/projects/xmesh-scaling.png" alt="曙光多 DCU 强扩展曲线" /></figure>
           </div>
           <p class="media__note">论文 Figure 1 系统总览；浮层为曙光多 DCU 强扩展曲线（PD-CAT 2026 投稿配图）</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 项目 5 -->
+    <article class="panel panel--project">
+      <div class="project">
+        <div class="project__body">
+          <div class="project__top">
+            <span class="project__index">05</span>
+            <span class="project__topTags">
+              <span class="tag tag--live"><i></i>在线可玩</span>
+            </span>
+          </div>
+          <h3 class="project__title">岳麓书院 · 可漫游 3D 数字复原 <span class="tag tag--feat">Three.js</span></h3>
+          <p class="project__sub">纯前端、无后端的岳麓书院：走进讲堂 / 御书楼 / 百泉轩，昼夜、流水与风动树叶</p>
+          <p class="project__desc">
+            用 Three.js 以 1 unit = 1 m 程序化重建岳麓书院的中轴、斋舍、文庙、后园与爱晚亭。
+            纹理、曲面屋顶、水面法线、灯笼光晕、树冠风摆与落叶都在浏览器里实时生成；场景刻意不放置人物，
+            把细节留给建筑、陈设与光影。支持第一人称漫游、移动端虚拟摇杆和 GLB 导出。
+          </p>
+          <ul class="project__points">
+            <li><b>程序化场景</b>：无外部模型与贴图依赖，瓦垄、窗棂、匾额、木纹、石材全部用 Canvas 生成</li>
+            <li><b>可进入空间</b>：讲堂、御书楼、百泉轩可从门洞进入，台基地面自动抬升，室内有书案、书架、茶器与宫灯</li>
+            <li><b>实时细节</b>：水面法线流动、树冠顶点风摆、150 片飘落树叶、昼夜灯光与灯笼光晕</li>
+            <li><b>纯静态交付</b>：不需要 Node、后端或数据库；桌面键鼠与手机触控均可漫游</li>
+          </ul>
+          <div class="project__tags">
+            <span class="tag">Three.js</span><span class="tag">程序化建模</span><span class="tag">第一人称漫游</span><span class="tag">移动端适配</span><span class="tag">GLB 导出</span>
+          </div>
+          <div class="project__links">
+            <a class="project-link project-link--primary" href="yuelu-academy/" target="_blank" rel="noopener">
+              在线漫游
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 6l6 6-6 6"/></svg>
+            </a>
+            <a class="project-link" href="https://github.com/Tang-0118/Yuelu-academy" target="_blank" rel="noopener">
+              GitHub 源码
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5h5v5M19 5l-8 8"/><path d="M19 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="project__media" data-parallax>
+          <figure class="ui-main">
+            <img src="assets/projects/yuelu-hero.jpg" alt="岳麓书院 3D 场景全景：中轴院落、讲堂、御书楼与后山" loading="lazy" decoding="async" />
+            <figcaption>
+              <span class="chip chip--ok"><i></i>实时 3D</span>
+              <span class="ui-main__txt">低角度全景 · 可进入讲堂与御书楼</span>
+            </figcaption>
+          </figure>
+          <div class="ui-row">
+            <figure class="ui-thumb">
+              <img src="assets/projects/yuelu-lion.jpg" alt="门前石狮：卷鬃、獠牙、前爪与绣球" loading="lazy" decoding="async" />
+              <figcaption>门前石狮 · 卷鬃与绣球</figcaption>
+            </figure>
+            <figure class="ui-thumb">
+              <img src="assets/projects/yuelu-interior.jpg" alt="讲堂室内：忠孝廉节匾、讲案、书案与宫灯" loading="lazy" decoding="async" />
+              <figcaption>走进讲堂 · 室内陈设</figcaption>
+            </figure>
+          </div>
+          <p class="media__note">在线版本与本站同域部署，打开即可漫游；源码与 GLB 在 GitHub。</p>
         </div>
       </div>
     </article>

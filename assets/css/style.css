@@ -423,6 +423,29 @@ main,.dock{position:relative;z-index:1}
 .project__points b{color:var(--ink);font-weight:600}
 .project__tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 
+/* 项目跳转按钮：在线演示 / 源码 */
+.project__links{display:flex;flex-wrap:wrap;gap:9px;margin-top:8px}
+.project-link{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 16px;border-radius:var(--r-pill);
+  font-size:13px;font-weight:600;color:var(--ink);
+  background:rgba(255,255,255,.88);border:1px solid var(--line);
+  box-shadow:var(--shadow-sm);text-decoration:none;
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .3s ease,background .3s ease;
+}
+.project-link svg{
+  width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;transition:transform .35s var(--ease);
+}
+.project-link:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:rgba(12,19,27,.18)}
+.project-link:hover svg{transform:translate(2px,-2px)}
+.project-link--primary{
+  color:#fff;border-color:transparent;
+  background:linear-gradient(180deg,#161e2a,#0c131b);
+  box-shadow:0 10px 26px -12px rgba(12,19,27,.7);
+}
+.project-link--primary:hover{box-shadow:0 18px 40px -16px rgba(12,19,27,.75)}
+
 /* 项目媒体区 */
 .project__media{position:relative;display:flex;flex-direction:column;gap:11px}
 .media{position:relative}

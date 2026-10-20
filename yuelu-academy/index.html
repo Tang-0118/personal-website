@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#171512">
+  <title>岳麓书院 · 千年学府 3D 漫游</title>
+  <meta name="description" content="一座可探索的岳麓书院三维模型：中轴对称的讲堂、御书楼、斋舍、文庙与爱晚亭，支持昼夜、第一人称漫游与 GLB 导出。">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='4' fill='%23a43b2b'/%3E%3Ctext x='32' y='45' font-family='KaiTi,serif' font-size='42' fill='%23f7efe0' text-anchor='middle'%3E岳%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <div id="app">
+    <canvas id="scene" tabindex="0" aria-label="岳麓书院三维场景"></canvas>
+
+    <div id="labels" aria-hidden="true"></div>
+
+    <div id="grade"></div>
+    <div id="grain"></div>
+    <div id="vignette"></div>
+    <div id="veil"></div>
+
+    <header id="brand">
+      <div class="seal" aria-hidden="true">岳</div>
+      <div class="brand-copy">
+        <h1>岳麓书院</h1>
+        <p class="sub">YUELU ACADEMY <span>·</span> EST. 976</p>
+      </div>
+    </header>
+
+    <nav id="toolbar" aria-label="场景控制">
+      <button id="btn-route" type="button" title="推荐导览路线 (R)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h11M4 18h16"/></svg>
+        <span class="txt">导览</span>
+      </button>
+      <button id="btn-time" type="button" title="切换昼夜 (N)">
+        <span class="ico">☀</span><span class="txt">昼</span>
+      </button>
+      <button id="btn-labels" type="button" title="显示完整建筑标注 (L)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5Z"/></svg>
+        <span class="txt">标注</span>
+      </button>
+      <button id="btn-walk" type="button" title="第一人称漫游 (V)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 4.5a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8.5 9.5l2.2 3.2-1.5 2.6-1.2 4M12 11.5l2.2 2.2 1.1 4.8M10.7 9.2l3.8 1.4 2.2 2.6"/></svg>
+        <span class="txt">漫游</span>
+      </button>
+      <button id="btn-export" type="button" title="导出 GLB 模型">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v10m0 0 4-4m-4 4-4-4M4 17v3h16v-3"/></svg>
+        <span class="txt">导出</span>
+      </button>
+    </nav>
+
+    <nav id="route-panel" aria-label="推荐游览路线">
+      <div class="panel-head">
+        <div>
+          <div class="eyebrow">SUGGESTED ROUTE</div>
+          <h2>循中轴，入千年</h2>
+        </div>
+        <button id="route-close" class="icon-btn" type="button" aria-label="关闭导览">×</button>
+      </div>
+      <ol id="route-list"></ol>
+      <p class="route-note">点击任意一站，镜头将移至该建筑。</p>
+    </nav>
+
+    <aside id="info" aria-hidden="true" aria-live="polite">
+      <button id="info-close" class="icon-btn" type="button" aria-label="关闭介绍">×</button>
+      <div class="info-kicker">
+        <span id="info-group">中轴</span>
+        <i></i>
+        <span id="info-period">清</span>
+      </div>
+      <h2 id="info-name">讲堂</h2>
+      <p id="info-en" class="info-en">LECTURE HALL</p>
+      <div class="info-rule"><span></span></div>
+      <p id="info-text" class="info-text"></p>
+      <button id="info-walk" type="button" class="text-link">
+        步行探访 <span aria-hidden="true">→</span>
+      </button>
+    </aside>
+
+    <div id="hint">
+      <span class="hint-dot"></span>
+      <span>拖动旋转 · 滚轮缩放 · 点击红点看建筑</span>
+      <span class="sep">/</span>
+      <kbd>V</kbd><span>漫游</span>
+    </div>
+
+    <div id="compass" role="button" tabindex="0" title="点击回到全景视角">
+      <div class="compass-ring">
+        <span class="c n">北</span><span class="c e">东</span><span class="c s">南</span><span class="c w">西</span>
+        <span id="compass-needle" class="needle"></span>
+        <span class="compass-center"></span>
+      </div>
+      <div id="compass-dir" class="compass-dir">东 · EAST</div>
+    </div>
+
+    <div id="walkbar">
+      <span class="walk-mode">漫游模式</span>
+      <span class="walk-tip" id="walk-tip">W A S D 移动 · 鼠标环视 · Shift 加速 · Esc 退出</span>
+      <button id="walk-exit" type="button" aria-label="退出漫游">退出</button>
+    </div>
+
+    <div id="joystick" aria-hidden="true">
+      <div id="joystick-knob"></div>
+      <span>移动</span>
+    </div>
+
+    <div id="crosshair" aria-hidden="true"><i></i><i></i></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+
+    <div id="loading">
+      <div class="load-inner">
+        <div class="load-seal">岳</div>
+        <div class="load-title">岳麓书院</div>
+        <div class="load-sub">千年学府 · 3D RECONSTRUCTION</div>
+        <div class="load-track"><i id="load-progress"></i></div>
+        <div id="load-status" class="load-status">正在铺陈山水…</div>
+      </div>
+      <div class="load-foot">惟楚有材 · 于斯为盛</div>
+    </div>
+  </div>
+  <a id="yl-back" href="../#work">← 返回作品集</a>
+
+  <noscript>
+    <div style="position:fixed;inset:0;display:grid;place-items:center;background:#171512;color:#e8dfcd;font-family:serif;">
+      此 3D 场景需要启用 JavaScript。
+    </div>
+  </noscript>
+
+  <script src="vendor/three.min.js"></script>
+  <script src="vendor/BufferGeometryUtils.js"></script>
+  <script src="vendor/OrbitControls.js"></script>
+  <script src="vendor/GLTFExporter.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/architecture.js"></script>
+  <script src="js/furnishings.js"></script>
+  <script src="js/scene.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
