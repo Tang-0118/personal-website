@@ -10,6 +10,7 @@
   const VS = YL.VS = { hall: 1.16, gate: 1.12, library: 1.15, tower: 1.12, stage: 1.12, pavilion: 1.08 };
 
   YL.floorZones = YL.floorZones || [];
+  YL.ramps = YL.ramps || [];
   YL.lionGroups = YL.lionGroups || [];
   YL.addFloorZone = function (x, z, w, d, y, ry) {
     const c = Math.abs(Math.cos(ry || 0)), s = Math.abs(Math.sin(ry || 0));
@@ -22,7 +23,35 @@
     for (const f of YL.floorZones) {
       if (x > f.minX && x < f.maxX && z > f.minZ && z < f.maxZ && f.y > y) y = f.y;
     }
+    // Smooth ramp over each stair flight. Without this the camera jumps from
+    // ground level straight onto the platform and clips through the risers.
+    for (const r of YL.ramps) {
+      const dx = x - r.x, dz = z - r.z;
+      const lx = dx * r.c - dz * r.s;
+      const lz = dx * r.s + dz * r.c;
+      if (Math.abs(lx) > r.w / 2 || lz > r.z0 || lz < r.z1) continue;
+      const t = Math.max(0, Math.min(1, (r.z0 - lz) / (r.z0 - r.z1)));
+      const sy = y + (r.yTop - y) * t;
+      if (sy > y) y = sy;
+    }
     return y;
+  };
+
+  YL.addStepRamp = function (parent, width, top, frontZ, n, run) {
+    if (!parent || top <= 0.04) return;
+    const scale = parent.scale.y || 1;
+    const z0 = frontZ + n * run;   // outer, ground end
+    const z1 = frontZ;             // inner, platform end
+    YL.ramps.push({
+      x: parent.position.x,
+      z: parent.position.z,
+      w: width * 0.94,
+      z0: z0,
+      z1: z1,
+      yTop: parent.position.y + (top + 0.16) * scale,
+      c: Math.cos(parent.rotation.y || 0),
+      s: Math.sin(parent.rotation.y || 0)
+    });
   };
 
   YL.colliders = YL.colliders || [];
@@ -66,6 +95,7 @@
     for (const sx of [-1, 1]) {
       YL.box(parent, 0.28, top + 0.12, 1.0, M().stoneDark, sx * (width / 2 - 0.14), (top + 0.12) / 2, frontZ + 0.35, { cast: true });
     }
+    if (YL.addStepRamp) YL.addStepRamp(parent, width, top, frontZ, n, run);
   }
   YL.stepFlight = stepFlight;
 
@@ -683,6 +713,33 @@
   };
 
   /* --------------------------- trees --------------------------- */
+  function addMapleLeafCards(g, s, h, lean, rng) {
+    const mat = M().mapleCard;
+    if (!mat) return;
+    const count = 70;
+    const geo = new THREE.PlaneGeometry(0.31 * s, 0.31 * s);
+    const cards = new THREE.InstancedMesh(geo, mat, count);
+    const colors = [0xa92f1d, 0xc34524, 0xd05b2c, 0x8e2a1c, 0xd18432];
+    const dummy = new THREE.Object3D();
+    for (let i = 0; i < count; i++) {
+      const a = rng() * TAU;
+      const rr = (1.2 + rng() * 2.35) * s;
+      const yy = h * (0.54 + rng() * 0.43);
+      dummy.position.set(Math.cos(a) * rr + lean, yy, Math.sin(a) * rr);
+      dummy.rotation.set((rng() - 0.5) * 1.9, rng() * TAU, (rng() - 0.5) * 1.9);
+      dummy.scale.setScalar(0.72 + rng() * 0.7);
+      dummy.updateMatrix();
+      cards.setMatrixAt(i, dummy.matrix);
+      cards.setColorAt(i, new THREE.Color(colors[Math.floor(rng() * colors.length)]).convertSRGBToLinear());
+    }
+    cards.instanceMatrix.needsUpdate = true;
+    if (cards.instanceColor) cards.instanceColor.needsUpdate = true;
+    cards.castShadow = false;
+    cards.receiveShadow = false;
+    cards.frustumCulled = false;
+    g.add(cards);
+  }
+
   YL.makeTree = function (opt) {
     const type = opt.type || 'camphor';
     const s = opt.scale || 1;
@@ -725,12 +782,12 @@
     else if (type === 'maple') mats = [M().maple, M().mapleLight, M().maple];
     else mats = [M().leafA, M().leafB, M().leafC, M().leafD];
 
-    const count = type === 'ginkgo' ? 24 : (type === 'maple' ? 22 : 30);
+    const count = type === 'ginkgo' ? 24 : (type === 'maple' ? 34 : 30);
     for (let i = 0; i < count; i++) {
       const a = rng() * Math.PI * 2;
       const rr = (type === 'ginkgo' ? 1.8 : 2.8) * s * (0.22 + rng() * 0.78);
       const yy = h * (0.55 + rng() * 0.42);
-      const rad = (type === 'ginkgo' ? (0.42 + rng() * 0.55) : (0.48 + rng() * 0.72)) * s;
+      const rad = (type === 'ginkgo' ? (0.42 + rng() * 0.55) : (type === 'maple' ? (0.38 + rng() * 0.55) : (0.48 + rng() * 0.72))) * s;
       const geo = new THREE.IcosahedronGeometry(rad, 1);
       const mesh = new THREE.Mesh(geo, mats[Math.floor(rng() * mats.length)]);
       mesh.position.set(Math.cos(a) * rr + lean, yy, Math.sin(a) * rr);
@@ -740,6 +797,7 @@
       g.add(mesh);
     }
     YL.mergeByMaterial(g);
+    if (type === 'maple') addMapleLeafCards(g, s, h, lean, rng);
     return g;
   };
 

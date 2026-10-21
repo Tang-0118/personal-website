@@ -73,7 +73,7 @@
       id: 'aiwan', name: '爱晚亭', en: 'AIWAN PAVILION', group: '院外', period: '清 · 1792',
       pos: new THREE.Vector3(30, 10.5, -88),
       view: { pos: new THREE.Vector3(20, 10, -71), target: new THREE.Vector3(30, 4.5, -88) },
-      text: '院外清风峡中，清乾隆五十七年（1792）由山长罗典建，原名红叶亭，后取杜牧“停车坐爱枫林晚”诗意更名。重檐方亭，为中国四大名亭之一。'
+      text: '院外清风峡中，清乾隆五十七年（1792）由山长罗典建，原名红叶亭，后取杜牧“停车坐爱枫林晚，霜叶红于二月花”诗意更名。四周多枫香、三角枫与鸡爪槭，深秋红叶层染，为中国四大名亭之一。'
     },
     {
       id: 'zibei', name: '自卑亭', en: 'ZIBEI PAVILION', group: '院外', period: '清 · 1688',
@@ -719,21 +719,26 @@
       world.add(YL.stoneLantern(world, p[0], p[1], 0.72));
     }
 
-    // fallen maple leaves on the clearing
-    const leafGeo = new THREE.CircleGeometry(0.13, 6);
+    // fallen maple leaves on the clearing around Aiwan
+    const leafGeo = new THREE.PlaneGeometry(0.29, 0.29);
     leafGeo.rotateX(-Math.PI / 2);
-    const leafMat = new THREE.MeshStandardMaterial({
-      color: YL.linearColor(0xa84a23), roughness: 0.9, side: THREE.DoubleSide
-    });
-    const leaves = new THREE.InstancedMesh(leafGeo, leafMat, 56);
+    const leafMat = M().mapleGround;
+    const leaves = new THREE.InstancedMesh(leafGeo, leafMat, 140);
     const lrng = YL.rng(88), lm = new THREE.Matrix4();
-    for (let i = 0; i < 56; i++) {
-      const a = lrng() * TAU, r = 5 + lrng() * 13;
+    const leafCols = [0xa92f1d, 0xc34524, 0xd05b2c, 0x8e2a1c, 0xc78532];
+    for (let i = 0; i < 140; i++) {
+      const a = lrng() * TAU, r = 3.4 + lrng() * 15;
+      const x = 30 + Math.cos(a) * r;
+      const z = -88 + Math.sin(a) * r * 0.72;
       lm.makeRotationY(lrng() * TAU);
-      lm.setPosition(30 + Math.cos(a) * r, 0.08, -88 + Math.sin(a) * r * 0.7);
+      lm.setPosition(x, YL.groundHeight(x, z) + 0.035, z);
       leaves.setMatrixAt(i, lm);
+      leaves.setColorAt(i, new THREE.Color(leafCols[Math.floor(lrng() * leafCols.length)]).convertSRGBToLinear());
     }
     leaves.instanceMatrix.needsUpdate = true;
+    if (leaves.instanceColor) leaves.instanceColor.needsUpdate = true;
+    leaves.frustumCulled = false;
+    leaves.receiveShadow = true;
     world.add(leaves);
   }
 
@@ -757,14 +762,21 @@
       // rear garden
       [-38, -35, 'maple', 0.9, 61], [38, -22, 'maple', 0.82, 62],
       [-22, -57, 'camphor', 0.9, 63], [22, -61, 'camphor', 0.85, 64],
-      // Aiwan
+      // Aiwan maple grove (枫香 / 鸡爪槭意象)
       [14, -99, 'maple', 1.12, 71], [46, -97, 'maple', 1.2, 72],
       [7, -93, 'maple', 0.95, 73], [48, -83, 'camphor', 1.0, 74],
+      [18, -104, 'maple', 1.05, 91], [38, -105, 'maple', 1.1, 92],
+      [10, -84, 'maple', 0.9, 93], [41, -88, 'maple', 1.0, 94],
+      [23, -101, 'maple', 0.95, 95], [8, -81, 'maple', 0.82, 96],
+      [50, -92, 'maple', 0.95, 97],
       // Zibei
       [-36, 98, 'camphor', 0.95, 81], [-12, 102, 'ginkgo', 0.9, 82]
     ];
     for (const t of trees) {
-      world.add(YL.makeTree({ x: t[0], z: t[1], type: t[2], scale: t[3], seed: t[4] }));
+      world.add(YL.makeTree({
+        x: t[0], z: t[1], y: YL.groundHeight(t[0], t[1]),
+        type: t[2], scale: t[3], seed: t[4]
+      }));
     }
     world.add(YL.makeBamboo({ x: -40, z: -22, count: 22, seed: 5 }));
     world.add(YL.makeBamboo({ x: 47, z: -57, count: 16, seed: 9 }));
@@ -923,28 +935,18 @@
 
   /* ------------------------- falling leaves ------------------------- */
   function makeFallingLeaves(scene) {
-    const c = YL.canvas(64, 64), g = c.getContext('2d');
-    g.clearRect(0, 0, 64, 64);
-    g.translate(32, 32);
-    g.fillStyle = '#ffffff';
-    g.beginPath();
-    g.moveTo(0, -24);
-    g.bezierCurveTo(20, -20, 23, 5, 0, 23);
-    g.bezierCurveTo(-23, 5, -20, -20, 0, -24);
-    g.fill();
-    g.strokeStyle = 'rgba(80,50,20,.65)'; g.lineWidth = 2;
-    g.beginPath(); g.moveTo(0, -22); g.lineTo(0, 24); g.stroke();
-    const tex = new THREE.CanvasTexture(c);
-    tex.encoding = THREE.sRGBEncoding;
-    const count = 150;
+    const tex = YL.TX.mapleLeaf;
+    if (!tex) return null;
+    const count = 200;
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
     const data = [];
     const centers = [
-      { x: -17, z: 24, r: 6.5, top: 10, n: 60 },
-      { x: 30, z: -88, r: 9, top: 8, n: 55 },
-      { x: 11, z: 38, r: 3.5, top: 8, n: 20 },
-      { x: 20, z: -17, r: 4, top: 9, n: 15 }
+      { x: -17, z: 24, r: 6.5, top: 10, n: 48 },
+      { x: 30, z: -88, r: 12, top: 9, n: 110 },
+      { x: 11, z: 38, r: 3.5, top: 8, n: 18 },
+      { x: 20, z: -17, r: 4, top: 9, n: 12 },
+      { x: 42, z: -98, r: 5, top: 8, n: 12 }
     ];
     let idx = 0;
     const rng = YL.rng(404);
@@ -957,7 +959,7 @@
         positions[idx * 3 + 1] = by;
         positions[idx * 3 + 2] = bz;
         const warm = rng();
-        const col = new THREE.Color(warm > 0.55 ? 0xc79a2a : (warm > 0.25 ? 0xa9632b : 0x8d3a26)).convertSRGBToLinear();
+        const col = new THREE.Color(warm > 0.72 ? 0xd18432 : (warm > 0.42 ? 0xc34524 : (warm > 0.18 ? 0xa92f1d : 0x8a2418))).convertSRGBToLinear();
         colors[idx * 3] = col.r; colors[idx * 3 + 1] = col.g; colors[idx * 3 + 2] = col.b;
         data.push({
           bx: bx, bz: bz, by: by,
@@ -972,8 +974,8 @@
     geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     const mat = new THREE.PointsMaterial({
-      size: 0.26, map: tex, transparent: true, alphaTest: 0.18,
-      depthWrite: false, vertexColors: true, sizeAttenuation: true, opacity: 0.9
+      size: 0.32, map: tex, transparent: true, alphaTest: 0.18,
+      depthWrite: false, vertexColors: true, sizeAttenuation: true, opacity: 0.92
     });
     const points = new THREE.Points(geo, mat);
     points.frustumCulled = false;

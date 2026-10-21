@@ -374,6 +374,34 @@
     envCube.encoding = THREE.sRGBEncoding;
     YL.TX.env = envCube;
 
+    // A five-lobed maple leaf silhouette, shared by tree cards, fallen leaves
+    // and the drifting leaf particles around Aiwan Pavilion.
+    const ml = YL.canvas(128, 128), mg = ml.getContext('2d');
+    mg.clearRect(0, 0, 128, 128);
+    mg.save();
+    mg.translate(64, 68);
+    mg.fillStyle = '#ffffff';
+    const maplePts = [
+      [0, -54], [9, -31], [27, -38], [20, -16], [44, -9],
+      [27, 6], [34, 27], [12, 18], [10, 41], [0, 30],
+      [-10, 41], [-12, 18], [-34, 27], [-27, 6], [-44, -9],
+      [-20, -16], [-27, -38], [-9, -31]
+    ];
+    mg.beginPath();
+    mg.moveTo(maplePts[0][0], maplePts[0][1]);
+    for (let i = 1; i < maplePts.length; i++) mg.lineTo(maplePts[i][0], maplePts[i][1]);
+    mg.closePath();
+    mg.fill();
+    mg.strokeStyle = 'rgba(255,255,255,.9)';
+    mg.lineWidth = 3;
+    mg.beginPath(); mg.moveTo(0, 26); mg.lineTo(0, 50); mg.stroke();
+    mg.restore();
+    const mapleTex = new THREE.CanvasTexture(ml);
+    mapleTex.encoding = THREE.sRGBEncoding;
+    mapleTex.wrapS = mapleTex.wrapT = THREE.ClampToEdgeWrapping;
+    mapleTex.anisotropy = 4;
+    YL.TX.mapleLeaf = mapleTex;
+
     const door = latticeCanvases('door');
     const win = latticeCanvases('window');
     YL.TX.door = texture(door.map, 1, 1);
@@ -466,6 +494,15 @@
     M.pine = std({ color: 0x22382a, roughness: 0.92, flatShading: false });
     M.bamboo = std({ color: 0x4c6e34, roughness: 0.88 });
     M.bambooLeaf = std({ color: 0x5e8440, roughness: 0.88, flatShading: false });
+    M.mapleCard = new THREE.MeshStandardMaterial({
+      map: YL.TX.mapleLeaf, color: 0xffffff,
+      transparent: true, alphaTest: 0.35, depthWrite: true,
+      side: THREE.DoubleSide, roughness: 0.88, metalness: 0
+    });
+    M.mapleGround = new THREE.MeshStandardMaterial({
+      map: YL.TX.mapleLeaf, color: 0xffffff,
+      alphaTest: 0.4, side: THREE.DoubleSide, roughness: 0.92, metalness: 0
+    });
     M.grass = std({ color: 0x6f7d4f, roughness: 1 });
     M.water = new THREE.MeshStandardMaterial({
       color: 0x16312e, roughness: 0.3, metalness: 0.08,
