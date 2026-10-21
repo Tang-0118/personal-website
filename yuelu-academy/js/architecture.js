@@ -10,6 +10,7 @@
   const VS = YL.VS = { hall: 1.16, gate: 1.12, library: 1.15, tower: 1.12, stage: 1.12, pavilion: 1.08 };
 
   YL.floorZones = YL.floorZones || [];
+  YL.lionGroups = YL.lionGroups || [];
   YL.addFloorZone = function (x, z, w, d, y, ry) {
     const c = Math.abs(Math.cos(ry || 0)), s = Math.abs(Math.sin(ry || 0));
     const ex = w / 2 * c + d / 2 * s;
@@ -1039,6 +1040,7 @@
     }
 
     YL.mergeByMaterial(g);
+    YL.lionGroups.push(g);
     return g;
   };
 

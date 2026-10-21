@@ -1100,6 +1100,35 @@ body.no-ui #scene { cursor: default; }
   }
 }
 
+/* CC attribution for the scanned guardian lions */
+#lion-credit {
+  position: fixed;
+  left: 50%;
+  bottom: 64px;
+  z-index: 17;
+  transform: translateX(-50%);
+  padding: 3px 9px;
+  border-radius: 99px;
+  background: rgba(20, 24, 22, 0.32);
+  color: rgba(248, 242, 229, 0.72);
+  font-size: 8px;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  white-space: nowrap;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+#lion-credit:hover { color: #fff8e9; background: rgba(20, 24, 22, 0.55); }
+
+body.walking #lion-credit,
+body.no-ui #lion-credit { display: none; }
+
+@media (max-width: 780px) {
+  #lion-credit { bottom: 50px; font-size: 7.5px; }
+}
+
 /* return link injected for the portfolio embedding */
 #yl-back {
   position: fixed;
@@ -1123,10 +1152,7 @@ body.no-ui #scene { cursor: default; }
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
-#yl-back:hover {
-  background: rgba(255, 251, 242, 0.96);
-  transform: translateY(-2px);
-}
+#yl-back:hover { background: rgba(255, 251, 242, 0.96); transform: translateY(-2px); }
 
 body.walking #yl-back,
 body.no-ui #yl-back { display: none; }

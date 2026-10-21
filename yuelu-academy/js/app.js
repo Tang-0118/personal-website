@@ -91,6 +91,7 @@
       ctx.lights.sun.shadow.needsUpdate = true;
     }
     YL.applyTimeOfDay(ctx, false);
+    if (YL.loadLionModel) YL.loadLionModel();
     setProgress(0.76, '正在悬挂匾额…');
 
     buildLabels();

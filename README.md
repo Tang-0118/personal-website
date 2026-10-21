@@ -34,7 +34,7 @@ personal-website/
 │  ├─ me.jpg / me-portrait.jpg   首屏方照 / 自我介绍区的竖版照片
 │  ├─ photos/life-*.jpg          兴趣爱好照片墙的九张真实照片（健身 ×2 / 旅游 ×5 / 绘画 ×2）
 │  └─ projects/                  五个项目的配图（见「素材来源」）
-├─ yuelu-academy/                岳麓书院 3D 在线漫游子站（纯前端运行文件，不含 45 MB 的 GLB）
+├─ yuelu-academy/                岳麓书院 3D 在线漫游子站（含 2.1 MB 石狮扫描，不含 38.9 MB 的整场景 GLB）
 ├─ resume/                       简历工作区：resume.pdf（下载按钮指向它）/ docx 母版 / 网页版 PDF / 生成脚本
 ├─ tools/                        站点工具：截图与打印 PDF、移动端体检、资源链接检查、打包部署 zip
 ├─ preview.png / preview-mobile.png
@@ -49,7 +49,9 @@ personal-website/
 - 在线漫游：<https://kexin.uno/yuelu-academy/>
 - 源码仓库：<https://github.com/Tang-0118/Yuelu-academy>
 
-`yuelu-academy/` 只复制了运行所需的前端文件（`index.html`、`css/`、`js/`、`vendor/`），**没有复制 45 MB 的 GLB、截图和开发工具**。页面里的「导出」按钮会在浏览器里即时生成 GLB，所以线上子站不需要预置模型文件，整个子站约 0.9 MB。
+`yuelu-academy/` 只复制了运行所需的前端文件（`index.html`、`css/`、`js/`、`vendor/`）和**优化后的 2.1 MB 石狮扫描** `assets/lion.glb`，**没有复制 38.9 MB 的整场景 GLB、截图和开发工具**。页面里的「导出」按钮会在浏览器里即时生成整场景 GLB，所以线上子站不需要预置整个模型，子站总计约 3 MB。
+
+石狮使用 **Chinese Guardian Lions** by **SolidXperts**，许可为 **CC BY-NC 4.0**（署名、非商业）。原始 Sketchfab 扫描约 100 万面，通过 Objaverse 取得 GLB 后用 `gltfpack` 减到约 3 万面；子站底部保留可见署名和来源链接。若网站转为商业用途，请替换该资产或另行取得授权。
 
 子站左下角加了「← 返回作品集」链接，指向本站 `#work`。第 05 张卡片的主预览图换成夜景全景，缩略图为爱晚亭和讲堂室内，存放在 `assets/projects/yuelu-*.jpg`。
 
