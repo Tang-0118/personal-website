@@ -873,7 +873,7 @@
       if (warm < 0.14) col.setHSL(0.012 + rng() * 0.018, 0.46 + rng() * 0.16, 0.20 + rng() * 0.10);
       else if (warm < 0.78) col.setHSL(0.055 + rng() * 0.075, 0.38 + rng() * 0.22, 0.17 + rng() * 0.16);
       else if (warm < 0.92) col.setHSL(0.13 + rng() * 0.045, 0.34 + rng() * 0.16, 0.23 + rng() * 0.12);
-      else col.setHSL(0.22, 0.24, 0.14 + rng() * 0.04);
+      else col.setHSL(0.10, 0.30, 0.18 + rng() * 0.05);
       col.convertSRGBToLinear();
       crowns.setColorAt(n, col);
       n++;

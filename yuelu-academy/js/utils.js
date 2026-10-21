@@ -536,9 +536,9 @@
     M.ginkgoLight = std({ color: 0xe4b83a, roughness: 0.86, flatShading: false });
     M.maple = std({ color: 0x8c2318, roughness: 0.86, flatShading: false });
     M.mapleLight = std({ color: 0xb43a1f, roughness: 0.86, flatShading: false });
-    M.pine = std({ color: 0x2b3a2a, roughness: 0.92, flatShading: false });
-    M.bamboo = std({ color: 0x536b37, roughness: 0.88 });
-    M.bambooLeaf = std({ color: 0x6f7d3b, roughness: 0.88, flatShading: false });
+    M.pine = std({ color: 0x3d4029, roughness: 0.92, flatShading: false });
+    M.bamboo = std({ color: 0x6b6a34, roughness: 0.88 });
+    M.bambooLeaf = std({ color: 0x7f7a3b, roughness: 0.88, flatShading: false });
     M.mapleCard = new THREE.MeshStandardMaterial({
       map: YL.TX.mapleLeaf, color: 0xffffff,
       transparent: true, alphaTest: 0.35, depthWrite: true,
