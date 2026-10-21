@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>陈可欣 | 个人作品集 · 计算机视觉 / 深度学习</title>
+<title>陈可欣 | 个人作品集 · 计算机视觉 / AI 应用</title>
 <meta name="description" content="陈可欣，湖南大学计算机学院智能科学与技术大三在读。研究方向为计算机视觉与深度学习算法落地，参与三个课题组校企合作项目（两个已商用上线）。这里是自我介绍、五个项目、兴趣爱好与个人简历。" />
 <meta name="theme-color" content="#f7f8fa" />
 
@@ -155,8 +155,8 @@
             <li><span>学校</span><b>湖南大学（985）</b></li>
             <li><span>学院 / 专业</span><b>计算机学院 · 智能科学与技术</b></li>
             <li><span>年级</span><b>2024 级 · 大三在读</b></li>
-            <li><span>研究方向</span><b>计算机视觉 · 深度学习 · 工业视觉</b></li>
-            <li><span>目标岗位</span><b>计算机视觉 / 深度学习算法（实习）</b></li>
+            <li><span>研究方向</span><b>计算机视觉 · 工业视觉 · AI 应用（Agent / RAG / 多模态）</b></li>
+            <li><span>目标岗位</span><b>AI 应用 / 多模态（VLM）/ AI 全栈（实习）· 计算机视觉算法</b></li>
           </ul>
         </div>
 
@@ -164,6 +164,7 @@
           <div class="fact"><b class="fact__num" data-count="2">0</b><span>个校企合作项目<br>已商用上线</span></div>
           <div class="fact"><b class="fact__num" data-count="2">0</b><span>个省级竞赛<br>奖项</span></div>
           <div class="fact"><b class="fact__num" data-count="1">0</b><span>篇国际会议论文<br>在审中</span></div>
+          <div class="fact"><b class="fact__num" data-count="8">0</b><span>个 Agent 工具<br>接入产线数据</span></div>
         </div>
       </div>
 
@@ -220,7 +221,7 @@
     <div class="toolkit" id="toolkit">
 
       <!-- 中间的大字：白字 + 黑描边，微微歪一点 -->
-      <p class="toolkit__label">CV <span>×</span> HPC</p>
+      <p class="toolkit__label">CV <span>×</span> HPC <span>×</span> AI</p>
 
       <!-- 贴纸标签：围着各自的文件夹摆，层级始终在文件夹下面，不会挡住口袋里的截图 -->
       <span class="sticker sticker--a1" style="--r:-8deg;--fx:3px;--fy:-7px;--dur:3.8s;--d:-1.1s">Python</span>
@@ -304,7 +305,7 @@
   <div class="section__head" data-reveal>
     <span class="section__kicker">03</span>
     <h2 class="section__title">作品集</h2>
-    <p class="section__sub">五个项目：车间安全防护、工业视觉质检 × 2、并行计算竞赛项目，以及一座可漫游的岳麓书院 3D 场景。往下滚动，卡片会自动叠起来。</p>
+    <p class="section__sub">六个项目：AI 质检 Copilot、车间安全防护、工业视觉质检 × 2、并行计算竞赛项目，以及一座可漫游的岳麓书院 3D 场景。往下滚动，卡片会自动叠起来。</p>
   </div>
 
   <div class="stack" id="workStack">
@@ -563,6 +564,58 @@
             </figure>
           </div>
           <p class="media__note">在线版本与本站同域部署，打开即可漫游；源码与 GLB 在 GitHub。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 项目 6 -->
+    <article class="panel panel--project">
+      <div class="project">
+        <div class="project__body">
+          <div class="project__top">
+            <span class="project__index">06</span>
+            <span class="project__topTags">
+              <span class="tag tag--live"><i></i>产线在用</span>
+            </span>
+          </div>
+          <h3 class="project__title">工业质检 AI Copilot <span class="tag tag--feat">Agent + RAG</span></h3>
+          <p class="project__sub">在已有的封口质检系统上加一层 AI：查单袋、筛一批、算指标、读文档、看图解释，每个答案都带出处</p>
+          <p class="project__desc">
+            原来的质检系统只会给出 OK / NG，操作员的下一句永远是「为什么」。这个项目在不改动原有相机、算法、PLC 的前提下，
+            在旁边加了一个独立的 AI 应用层：读取检测记录与运行日志，用工具查询拿到真实数字，再用大模型组织成人话；
+            知识类问题走检索并附引用来源，图像类问题交给视觉模型解释。模型是可替换的一环，数字不经过它。
+          </p>
+          <ul class="project__points">
+            <li><b>八个工具 + 意图路由</b>：单袋查询、按结果筛选、按测量值排序、超出阈值比例排序（找最接近合格的 NG）、原因分布、班次对比、连续同原因 NG 检测、知识检索；先判断「你在问一袋还是一批」，再决定调哪个</li>
+            <li><b>混合检索 + 引用</b>：BM25 与向量各占 0.6 / 0.4，再重排取前 5；答案必须带出处，证据不足时明确说查不到而不是编——不可答题 9 条全部正确拒答</li>
+            <li><b>多模态边界</b>：视觉模型只被允许判断封口有没有露出银边，禁止评价褶皱、纹理与温度压力等工艺参数；119 例人工标注上越界评价 0 例</li>
+            <li><b>三层评测</b>：221 条工具路由回归 + 64 条语义评测（事实/多跳/案例/不可答）+ 119 例视觉标注；靠评测定位过一个真缺陷——含「为什么」的知识题会被误判成单袋查询</li>
+            <li><b>时延与降级</b>：重排失败熔断、向量接口超时退回纯关键词、大模型超时降级为本地方案；端到端从 19.5 s 降到 3–5 s，模型可在本地 4B 与云端之间切换</li>
+          </ul>
+          <div class="project__tags">
+            <span class="tag">工具型 Agent</span><span class="tag">RAG 混合检索</span><span class="tag">多模态 VLM</span><span class="tag">FastAPI</span><span class="tag">评测闭环</span>
+          </div>
+        </div>
+
+        <div class="project__media" data-parallax>
+          <figure class="ui-main">
+            <img src="assets/projects/copilot-chat.png" alt="工业质检 AI Copilot：回答带 Agent 轨迹，展示规划步骤、工具调用与耗时" loading="lazy" decoding="async" />
+            <figcaption>
+              <span class="chip chip--ok"><i></i>Agent 轨迹</span>
+              <span class="ui-main__txt">规划 / 工具 / 证据 / 耗时 全部可见</span>
+            </figcaption>
+          </figure>
+          <div class="ui-row">
+            <figure class="ui-thumb">
+              <img src="assets/projects/copilot-stats.png" alt="Copilot 工作台：检测统计、最近检测记录与对话区" loading="lazy" decoding="async" />
+              <figcaption>工作台 · 统计与对话</figcaption>
+            </figure>
+            <figure class="ui-thumb">
+              <img src="assets/projects/copilot-arch.svg" alt="架构图：生产侧、数据入口、工具层、模型与界面" loading="lazy" decoding="async" />
+              <figcaption>分层架构</figcaption>
+            </figure>
+          </div>
+          <p class="media__note">部署在产线工控机上，界面与检测系统同机；模型可切本地或云端。</p>
         </div>
       </div>
     </article>
