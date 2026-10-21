@@ -51,7 +51,7 @@ personal-website/
 
 `yuelu-academy/` 只复制了运行所需的前端文件（`index.html`、`css/`、`js/`、`vendor/`），**没有复制 45 MB 的 GLB、截图和开发工具**。页面里的「导出」按钮会在浏览器里即时生成 GLB，所以线上子站不需要预置模型文件，整个子站约 0.9 MB。
 
-子站左下角加了「← 返回作品集」链接，指向本站 `#work`。第 05 张卡片的主预览图、石狮和讲堂室内图存放在 `assets/projects/yuelu-*.jpg`。
+子站左下角加了「← 返回作品集」链接，指向本站 `#work`。第 05 张卡片的主预览图换成夜景全景，缩略图为爱晚亭和讲堂室内，存放在 `assets/projects/yuelu-*.jpg`。
 
 ## 三、素材来源（都是真实素材，可直接替换）
 
@@ -70,7 +70,7 @@ personal-website/
 | `projects/xmesh-dcu-scaling.jpg` | `E:\竞赛\PAC\enhanced_results_figures_20260921\fig5_dcu_scaling.png` | 曙光 DCU 扩展性与加速比曲线 |
 | `projects/kit-crop-a.jpg`、`kit-crop-b.jpg` | `E:\yanbiao-detector-kit\output\450956\view.png` | 真实算法输出的缺陷标注图（已裁切放大）；工具包项目卡已撤下，2026-10-15 已移出仓库（备份在 `resume-work\_trash_20261015\site-assets\`） |
 | `projects/xmesh-overview/scaling/quality/terrain.png` | `E:\竞赛\PAC\xmesh_total\figures\figures\*.pdf` | 论文配图，由 PDF 转 PNG（200 dpi） |
-| `projects/yuelu-hero.jpg`、`yuelu-lion.jpg`、`yuelu-interior.jpg` | `E:\Deepseek_projects\yuelu-academy-3d\screenshots` | 岳麓书院 3D 项目预览：全景、门前石狮、讲堂室内；已压到 72–261 KB |
+| `projects/yuelu-night.jpg`、`yuelu-aiwan.jpg`、`yuelu-interior.jpg` | `https://kexin.uno/yuelu-academy/?ui=0` 截图 + `E:\Deepseek_projects\yuelu-academy-3d\screenshots` | 岳麓书院 3D 项目预览：夜景全景、爱晚亭、讲堂室内；已压到 76–216 KB |
 
 > 若之后重新跑算法或论文更新了配图，把新图覆盖同名文件即可，版式不用改。
 
