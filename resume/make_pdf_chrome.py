@@ -33,6 +33,9 @@ COMPACT_CSS = """
 @media print {
   html { font-size: %(px)spx; }
   .footer { display: none; }
+  /* 打印样式默认给卡片加了 break-inside: avoid，整块推不下就整块跳页，
+     这是「字号再小也还是两页」的真正原因；压一页时必须允许跨页断开。 */
+  .project-card, .entry, .skill-group, .award-item { break-inside: auto !important; }
   .section { padding-top: .6rem; }
   .entry { margin-bottom: .65rem; }
   .entry-list li { margin-bottom: .08rem; }
