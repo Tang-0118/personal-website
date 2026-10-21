@@ -374,33 +374,78 @@
     envCube.encoding = THREE.sRGBEncoding;
     YL.TX.env = envCube;
 
-    // A five-lobed maple leaf silhouette, shared by tree cards, fallen leaves
-    // and the drifting leaf particles around Aiwan Pavilion.
-    const ml = YL.canvas(128, 128), mg = ml.getContext('2d');
-    mg.clearRect(0, 0, 128, 128);
-    mg.save();
-    mg.translate(64, 68);
-    mg.fillStyle = '#ffffff';
-    const maplePts = [
-      [0, -54], [9, -31], [27, -38], [20, -16], [44, -9],
-      [27, 6], [34, 27], [12, 18], [10, 41], [0, 30],
-      [-10, 41], [-12, 18], [-34, 27], [-27, 6], [-44, -9],
-      [-20, -16], [-27, -38], [-9, -31]
-    ];
-    mg.beginPath();
-    mg.moveTo(maplePts[0][0], maplePts[0][1]);
-    for (let i = 1; i < maplePts.length; i++) mg.lineTo(maplePts[i][0], maplePts[i][1]);
-    mg.closePath();
-    mg.fill();
-    mg.strokeStyle = 'rgba(255,255,255,.9)';
-    mg.lineWidth = 3;
-    mg.beginPath(); mg.moveTo(0, 26); mg.lineTo(0, 50); mg.stroke();
-    mg.restore();
-    const mapleTex = new THREE.CanvasTexture(ml);
-    mapleTex.encoding = THREE.sRGBEncoding;
-    mapleTex.wrapS = mapleTex.wrapT = THREE.ClampToEdgeWrapping;
-    mapleTex.anisotropy = 4;
-    YL.TX.mapleLeaf = mapleTex;
+    // Detailed maple leaf silhouettes: five-lobed Acer palmatum / Chinese
+    // red maple, and three-lobed Liquidambar formosana (枫香). Veins are drawn
+    // in light grey so instance colours still tint the whole leaf.
+    function mapleLeafCanvas(lobes) {
+      const c = YL.canvas(256, 256), g = c.getContext('2d');
+      g.clearRect(0, 0, 256, 256);
+      g.save();
+      g.translate(128, 132);
+      g.fillStyle = '#ffffff';
+      g.strokeStyle = 'rgba(255,255,255,.96)';
+      g.lineWidth = 2.4;
+      if (lobes === 3) {
+        g.beginPath();
+        g.moveTo(0, -116);
+        g.quadraticCurveTo(35, -82, 96, -34);
+        g.quadraticCurveTo(58, -22, 45, -18);
+        g.quadraticCurveTo(40, 20, 0, 88);
+        g.quadraticCurveTo(-40, 20, -45, -18);
+        g.quadraticCurveTo(-58, -22, -96, -34);
+        g.quadraticCurveTo(-35, -82, 0, -116);
+        g.closePath();
+      } else {
+        g.beginPath();
+        g.moveTo(0, -116);
+        g.quadraticCurveTo(28, -82, 86, -52);
+        g.quadraticCurveTo(57, -36, 35, -27);
+        g.quadraticCurveTo(72, -3, 102, 36);
+        g.quadraticCurveTo(62, 23, 36, 29);
+        g.quadraticCurveTo(25, 65, 0, 88);
+        g.quadraticCurveTo(-25, 65, -36, 29);
+        g.quadraticCurveTo(-62, 23, -102, 36);
+        g.quadraticCurveTo(-72, -3, -35, -27);
+        g.quadraticCurveTo(-57, -36, -86, -52);
+        g.quadraticCurveTo(-28, -82, 0, -116);
+        g.closePath();
+      }
+      g.fill();
+      g.stroke();
+      // stem
+      g.fillStyle = '#ffffff';
+      g.fillRect(-2.5, 84, 5, 38);
+      // main veins
+      g.strokeStyle = 'rgba(198,198,198,.9)';
+      g.lineWidth = 2.1;
+      g.beginPath(); g.moveTo(0, 86); g.lineTo(0, -100); g.stroke();
+      const tips = lobes === 3 ? [[0, -108], [88, -34], [-88, -34]] :
+        [[0, -108], [80, -47], [94, 31], [-80, -47], [-94, 31]];
+      for (const tip of tips) {
+        g.beginPath();
+        g.moveTo(0, 82);
+        g.quadraticCurveTo(tip[0] * 0.25, tip[1] * 0.55, tip[0] * 0.82, tip[1] * 0.82);
+        g.stroke();
+      }
+      // fine tertiary veins
+      g.strokeStyle = 'rgba(210,210,210,.55)';
+      g.lineWidth = 0.9;
+      for (let i = 0; i < 12; i++) {
+        const a = -1.0 + i * 0.17;
+        g.beginPath();
+        g.moveTo(Math.cos(a) * 12, 60 - Math.abs(Math.sin(a)) * 20);
+        g.lineTo(Math.cos(a) * 58, 60 - Math.abs(Math.sin(a)) * 82);
+        g.stroke();
+      }
+      g.restore();
+      const t = new THREE.CanvasTexture(c);
+      t.encoding = THREE.sRGBEncoding;
+      t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping;
+      t.anisotropy = 4;
+      return t;
+    }
+    YL.TX.mapleLeaf = mapleLeafCanvas(5);
+    YL.TX.mapleLeaf3 = mapleLeafCanvas(3);
 
     const door = latticeCanvases('door');
     const win = latticeCanvases('window');
@@ -483,19 +528,24 @@
     M.wicker = std({ color: 0x8b6d45, roughness: 0.9 });
     M.trunk = std({ color: 0x5a4433, roughness: 0.96 });
     M.trunkDark = std({ color: 0x3e3026, roughness: 0.98 });
-    M.leafA = std({ color: 0x2e4a2b, roughness: 0.88, flatShading: false });
-    M.leafB = std({ color: 0x3a5c34, roughness: 0.88, flatShading: false });
-    M.leafC = std({ color: 0x4c6d3c, roughness: 0.88, flatShading: false });
-    M.leafD = std({ color: 0x243c29, roughness: 0.88, flatShading: false });
-    M.ginkgo = std({ color: 0xb58b22, roughness: 0.86, flatShading: false });
-    M.ginkgoLight = std({ color: 0xd0a832, roughness: 0.86, flatShading: false });
-    M.maple = std({ color: 0x8a2f1d, roughness: 0.86, flatShading: false });
-    M.mapleLight = std({ color: 0xb04a23, roughness: 0.86, flatShading: false });
-    M.pine = std({ color: 0x22382a, roughness: 0.92, flatShading: false });
-    M.bamboo = std({ color: 0x4c6e34, roughness: 0.88 });
-    M.bambooLeaf = std({ color: 0x5e8440, roughness: 0.88, flatShading: false });
+    M.leafA = std({ color: 0x7d5c2c, roughness: 0.88, flatShading: false });
+    M.leafB = std({ color: 0x93682c, roughness: 0.88, flatShading: false });
+    M.leafC = std({ color: 0xa97a31, roughness: 0.88, flatShading: false });
+    M.leafD = std({ color: 0x634f2b, roughness: 0.88, flatShading: false });
+    M.ginkgo = std({ color: 0xd6a126, roughness: 0.86, flatShading: false });
+    M.ginkgoLight = std({ color: 0xe4b83a, roughness: 0.86, flatShading: false });
+    M.maple = std({ color: 0x8c2318, roughness: 0.86, flatShading: false });
+    M.mapleLight = std({ color: 0xb43a1f, roughness: 0.86, flatShading: false });
+    M.pine = std({ color: 0x2b3a2a, roughness: 0.92, flatShading: false });
+    M.bamboo = std({ color: 0x536b37, roughness: 0.88 });
+    M.bambooLeaf = std({ color: 0x6f7d3b, roughness: 0.88, flatShading: false });
     M.mapleCard = new THREE.MeshStandardMaterial({
       map: YL.TX.mapleLeaf, color: 0xffffff,
+      transparent: true, alphaTest: 0.35, depthWrite: true,
+      side: THREE.DoubleSide, roughness: 0.88, metalness: 0
+    });
+    M.mapleCard3 = new THREE.MeshStandardMaterial({
+      map: YL.TX.mapleLeaf3, color: 0xffffff,
       transparent: true, alphaTest: 0.35, depthWrite: true,
       side: THREE.DoubleSide, roughness: 0.88, metalness: 0
     });
@@ -503,7 +553,11 @@
       map: YL.TX.mapleLeaf, color: 0xffffff,
       alphaTest: 0.4, side: THREE.DoubleSide, roughness: 0.92, metalness: 0
     });
-    M.grass = std({ color: 0x6f7d4f, roughness: 1 });
+    M.mapleGround3 = new THREE.MeshStandardMaterial({
+      map: YL.TX.mapleLeaf3, color: 0xffffff,
+      alphaTest: 0.4, side: THREE.DoubleSide, roughness: 0.92, metalness: 0
+    });
+    M.grass = std({ color: 0x5c5c30, roughness: 1 });
     M.water = new THREE.MeshStandardMaterial({
       color: 0x16312e, roughness: 0.3, metalness: 0.08,
       normalMap: YL.TX.waterN,

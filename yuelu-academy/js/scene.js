@@ -90,9 +90,9 @@
   /* ----------------------------- sky ----------------------------- */
   function makeSky(scene) {
     const uniforms = {
-      top: { value: new THREE.Color(0x6b88a4) },
-      mid: { value: new THREE.Color(0xc8d4d5) },
-      bottom: { value: new THREE.Color(0xf0d8b6) },
+      top: { value: new THREE.Color(0x64869f) },
+      mid: { value: new THREE.Color(0xc9c4b1) },
+      bottom: { value: new THREE.Color(0xf3c98f) },
       offset: { value: 12 },
       exponent: { value: 0.72 }
     };
@@ -198,13 +198,13 @@
 
   /* ---------------------------- lights ---------------------------- */
   function makeLights(scene) {
-    const hemi = new THREE.HemisphereLight(0xd2e2ef, 0x6e6450, 0.42);
+    const hemi = new THREE.HemisphereLight(0xe8dcc2, 0x6b5942, 0.46);
     hemi.color.convertSRGBToLinear();
     hemi.groundColor.convertSRGBToLinear();
     scene.add(hemi);
-    const sun = new THREE.DirectionalLight(0xffe0b0, 3.22);
+    const sun = new THREE.DirectionalLight(0xffd39a, 3.35);
     sun.color.convertSRGBToLinear();
-    sun.position.set(-150, 82, 190);
+    sun.position.set(-170, 72, 190);
     sun.castShadow = true;
     sun.shadow.mapSize.set(2048, 2048);
     sun.shadow.camera.left = -115;
@@ -217,11 +217,11 @@
     sun.shadow.normalBias = 0.035;
     sun.shadow.radius = 2;
     scene.add(sun);
-    const fill = new THREE.DirectionalLight(0xaac6dc, 0.18);
+    const fill = new THREE.DirectionalLight(0xa9bdc9, 0.14);
     fill.color.convertSRGBToLinear();
     fill.position.set(120, 70, -120);
     scene.add(fill);
-    const ambient = new THREE.AmbientLight(0xffffff, 0.08);
+    const ambient = new THREE.AmbientLight(0xfff1dc, 0.07);
     scene.add(ambient);
 
     const warm = [];
@@ -262,10 +262,11 @@
     geo.rotateX(-Math.PI / 2);
     const pos = geo.attributes.position;
     const colors = [];
-    const cLow = new THREE.Color(0x5a6943).convertSRGBToLinear();
-    const cMid = new THREE.Color(0x3a4d31).convertSRGBToLinear();
-    const cHigh = new THREE.Color(0x2b3b2b).convertSRGBToLinear();
-    const cRock = new THREE.Color(0x625d4e).convertSRGBToLinear();
+    const cLow = new THREE.Color(0x5f6137).convertSRGBToLinear();
+    const cMid = new THREE.Color(0x4c5030).convertSRGBToLinear();
+    const cHigh = new THREE.Color(0x3e422b).convertSRGBToLinear();
+    const cRock = new THREE.Color(0x5f594c).convertSRGBToLinear();
+    const cLitter = new THREE.Color(0x5c3d28).convertSRGBToLinear();
     const c = new THREE.Color();
     for (let i = 0; i < pos.count; i++) {
       const x = pos.getX(i);
@@ -277,7 +278,10 @@
       else c.copy(cMid).lerp(cHigh, (t - 0.5) * 2);
       const rock = YL.noise2(x * 0.08, z * 0.08);
       if (h > 24 && rock > 0.62) c.lerp(cRock, (rock - 0.62) * 1.7);
-      c.offsetHSL(0, 0, (YL.noise2(x * 0.04, z * 0.04) - 0.5) * 0.08);
+      const litter = YL.noise2(x * 0.035 + 7, z * 0.035 + 3);
+      if (litter > 0.56) c.lerp(cLitter, (litter - 0.56) * 0.9);
+      c.offsetHSL((YL.noise2(x * 0.055, z * 0.055) - 0.5) * 0.025, 0.04,
+        (YL.noise2(x * 0.04, z * 0.04) - 0.5) * 0.16);
       colors.push(c.r, c.g, c.b);
     }
     geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
@@ -435,7 +439,7 @@
     const padGeo = new THREE.CircleGeometry(0.42, 8);
     padGeo.rotateX(-Math.PI / 2);
     const padMat = new THREE.MeshStandardMaterial({
-      color: YL.linearColor(0x4f6f3c), roughness: 0.85, side: THREE.DoubleSide
+      color: YL.linearColor(0x7a6535), roughness: 0.85, side: THREE.DoubleSide
     });
     const pads = new THREE.InstancedMesh(padGeo, padMat, 28);
     const mtx = new THREE.Matrix4();
@@ -743,6 +747,29 @@
   }
 
   /* --------------------------- trees --------------------------- */
+  function makeLeafCarpet(world, spots, count) {
+    if (!spots.length) return;
+    const geo = new THREE.PlaneGeometry(0.27, 0.27);
+    geo.rotateX(-Math.PI / 2);
+    const mesh = new THREE.InstancedMesh(geo, M().mapleGround, count);
+    const rng = YL.rng(731), mtx = new THREE.Matrix4();
+    const cols = [0xa92f1d, 0xc34524, 0xd05b2c, 0x8e2a1c, 0xc78532, 0x8c6a2d];
+    for (let i = 0; i < count; i++) {
+      const p = spots[Math.floor(rng() * spots.length)];
+      const a = rng() * TAU, r = 1.0 + rng() * 4.8;
+      const x = p[0] + Math.cos(a) * r, z = p[1] + Math.sin(a) * r;
+      mtx.makeRotationY(rng() * TAU);
+      mtx.setPosition(x, YL.groundHeight(x, z) + 0.032, z);
+      mesh.setMatrixAt(i, mtx);
+      mesh.setColorAt(i, new THREE.Color(cols[Math.floor(rng() * cols.length)]).convertSRGBToLinear());
+    }
+    mesh.instanceMatrix.needsUpdate = true;
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    mesh.frustumCulled = false;
+    mesh.receiveShadow = true;
+    world.add(mesh);
+  }
+
   function makeTrees(world) {
     const trees = [
       // second courtyard ginkgos
@@ -772,17 +799,20 @@
       // Zibei
       [-36, 98, 'camphor', 0.95, 81], [-12, 102, 'ginkgo', 0.9, 82]
     ];
+    const autumnSpots = [];
     for (const t of trees) {
       world.add(YL.makeTree({
         x: t[0], z: t[1], y: YL.groundHeight(t[0], t[1]),
         type: t[2], scale: t[3], seed: t[4]
       }));
+      if (t[2] !== 'pine') autumnSpots.push([t[0], t[1]]);
     }
+    makeLeafCarpet(world, autumnSpots, 420);
     world.add(YL.makeBamboo({ x: -40, z: -22, count: 22, seed: 5 }));
     world.add(YL.makeBamboo({ x: 47, z: -57, count: 16, seed: 9 }));
 
     // a few shrubs / flower beds
-    const shrubMat = new THREE.MeshStandardMaterial({ color: YL.linearColor(0x4c6b3d), roughness: 0.95 });
+    const shrubMat = new THREE.MeshStandardMaterial({ color: YL.linearColor(0x5e532d), roughness: 0.95 });
     const rng = YL.rng(123);
     for (let i = 0; i < 42; i++) {
       const x = -45 + rng() * 90;
@@ -840,8 +870,10 @@
       mtx.compose(pos, q, sc);
       crowns.setMatrixAt(n, mtx);
       const warm = rng();
-      col.setHSL(0.255 + rng() * 0.04, 0.30 + rng() * 0.16, 0.14 + rng() * 0.13);
-      if (warm > 0.86) col.setHSL(0.09, 0.35, 0.35);
+      if (warm < 0.14) col.setHSL(0.012 + rng() * 0.018, 0.46 + rng() * 0.16, 0.20 + rng() * 0.10);
+      else if (warm < 0.78) col.setHSL(0.055 + rng() * 0.075, 0.38 + rng() * 0.22, 0.17 + rng() * 0.16);
+      else if (warm < 0.92) col.setHSL(0.13 + rng() * 0.045, 0.34 + rng() * 0.16, 0.23 + rng() * 0.12);
+      else col.setHSL(0.22, 0.24, 0.14 + rng() * 0.04);
       col.convertSRGBToLinear();
       crowns.setColorAt(n, col);
       n++;
@@ -937,16 +969,21 @@
   function makeFallingLeaves(scene) {
     const tex = YL.TX.mapleLeaf;
     if (!tex) return null;
-    const count = 200;
+    const count = 280;
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
     const data = [];
     const centers = [
-      { x: -17, z: 24, r: 6.5, top: 10, n: 48 },
-      { x: 30, z: -88, r: 12, top: 9, n: 110 },
-      { x: 11, z: 38, r: 3.5, top: 8, n: 18 },
-      { x: 20, z: -17, r: 4, top: 9, n: 12 },
-      { x: 42, z: -98, r: 5, top: 8, n: 12 }
+      { x: -17, z: 24, r: 6.5, top: 10, n: 45 },
+      { x: 30, z: -88, r: 12, top: 9, n: 100 },
+      { x: 11, z: 38, r: 3.5, top: 8, n: 22 },
+      { x: 20, z: -17, r: 4, top: 9, n: 18 },
+      { x: 42, z: -98, r: 5, top: 8, n: 10 },
+      { x: -38, z: -35, r: 6, top: 9, n: 25 },
+      { x: 38, z: -22, r: 5, top: 8, n: 20 },
+      { x: -18, z: -13, r: 5, top: 9, n: 15 },
+      { x: 17, z: 24, r: 5, top: 9, n: 15 },
+      { x: -44, z: 65, r: 4, top: 8, n: 10 }
     ];
     let idx = 0;
     const rng = YL.rng(404);
@@ -1054,21 +1091,21 @@
       }
       if (ctx.leaves) ctx.leaves.material.opacity = 0.35;
     } else {
-      sky.uniforms.top.value.setHex(0x6b88a4);
-      sky.uniforms.mid.value.setHex(0xc8d4d5);
-      sky.uniforms.bottom.value.setHex(0xf0d8b6);
+      sky.uniforms.top.value.setHex(0x64869f);
+      sky.uniforms.mid.value.setHex(0xc9c4b1);
+      sky.uniforms.bottom.value.setHex(0xf3c98f);
       sky.sun.material.opacity = 1;
       sky.moon.material.opacity = 0;
       sky.stars.material.opacity = 0;
       for (const c of sky.clouds) { c.material.opacity = 0.6; c.material.color.setHex(0xffffff).convertSRGBToLinear(); }
-      lights.sun.intensity = 3.22;
-      lights.sun.color.setHex(0xffe0b0).convertSRGBToLinear();
-      lights.sun.position.set(-150, 82, 190);
-      lights.hemi.intensity = 0.42;
-      lights.hemi.color.setHex(0xd2e2ef).convertSRGBToLinear();
-      lights.hemi.groundColor.setHex(0x6e6450).convertSRGBToLinear();
-      lights.fill.intensity = 0.18;
-      lights.ambient.intensity = 0.08;
+      lights.sun.intensity = 3.35;
+      lights.sun.color.setHex(0xffd39a).convertSRGBToLinear();
+      lights.sun.position.set(-170, 72, 190);
+      lights.hemi.intensity = 0.46;
+      lights.hemi.color.setHex(0xe8dcc2).convertSRGBToLinear();
+      lights.hemi.groundColor.setHex(0x6b5942).convertSRGBToLinear();
+      lights.fill.intensity = 0.14;
+      lights.ambient.intensity = 0.07;
       for (const l of lights.warm) l.intensity = 0;
       lights.hallLight.intensity = 1.25;
       lights.loungeLight.intensity = 1.8;

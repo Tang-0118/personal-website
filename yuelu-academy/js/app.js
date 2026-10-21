@@ -53,12 +53,12 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.12;
+    renderer.toneMappingExposure = 1.05;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0xd6dcd3, 0.00148);
+    scene.fog = new THREE.FogExp2(0xd3c8b1, 0.0014);
     scene.fog.color.convertSRGBToLinear();
 
     camera = new THREE.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.1, 1200);
@@ -324,8 +324,8 @@
   function setNight(v, silent) {
     night = !!v;
     YL.applyTimeOfDay(ctx, night);
-    scene.fog.color.setHex(night ? 0x111a26 : 0xd6dcd3).convertSRGBToLinear();
-    renderer.toneMappingExposure = night ? 0.92 : 1.12;
+    scene.fog.color.setHex(night ? 0x111a26 : 0xd3c8b1).convertSRGBToLinear();
+    renderer.toneMappingExposure = night ? 0.92 : 1.05;
     document.body.classList.toggle('night', night);
     updateTimeButton();
     if (walkLight) walkLight.intensity = night ? (walk.active ? 2.2 : 0) : 0;

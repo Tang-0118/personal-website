@@ -714,30 +714,38 @@
 
   /* --------------------------- trees --------------------------- */
   function addMapleLeafCards(g, s, h, lean, rng) {
-    const mat = M().mapleCard;
-    if (!mat) return;
-    const count = 70;
-    const geo = new THREE.PlaneGeometry(0.31 * s, 0.31 * s);
-    const cards = new THREE.InstancedMesh(geo, mat, count);
-    const colors = [0xa92f1d, 0xc34524, 0xd05b2c, 0x8e2a1c, 0xd18432];
+    if (!M().mapleCard) return;
+    const colors = [0xa92f1d, 0xc34524, 0xd05b2c, 0x8e2a1c, 0xd18432, 0x7e2218];
     const dummy = new THREE.Object3D();
-    for (let i = 0; i < count; i++) {
-      const a = rng() * TAU;
-      const rr = (1.2 + rng() * 2.35) * s;
-      const yy = h * (0.54 + rng() * 0.43);
-      dummy.position.set(Math.cos(a) * rr + lean, yy, Math.sin(a) * rr);
-      dummy.rotation.set((rng() - 0.5) * 1.9, rng() * TAU, (rng() - 0.5) * 1.9);
-      dummy.scale.setScalar(0.72 + rng() * 0.7);
-      dummy.updateMatrix();
-      cards.setMatrixAt(i, dummy.matrix);
-      cards.setColorAt(i, new THREE.Color(colors[Math.floor(rng() * colors.length)]).convertSRGBToLinear());
+    function build(mat, count, size) {
+      const geo = new THREE.PlaneGeometry(size * s, size * s);
+      const cards = new THREE.InstancedMesh(geo, mat, count * 2);
+      for (let i = 0; i < count; i++) {
+        const a = rng() * TAU;
+        const rr = (1.1 + rng() * 2.5) * s;
+        const yy = h * (0.52 + rng() * 0.45);
+        const yaw = rng() * TAU;
+        const tiltX = (rng() - 0.5) * 2.0, tiltZ = (rng() - 0.5) * 2.0;
+        const scale = 0.72 + rng() * 0.82;
+        const col = new THREE.Color(colors[Math.floor(rng() * colors.length)]).convertSRGBToLinear();
+        for (let k = 0; k < 2; k++) {
+          dummy.position.set(Math.cos(a) * rr + lean, yy, Math.sin(a) * rr);
+          dummy.rotation.set(tiltX, yaw + k * Math.PI / 2, tiltZ);
+          dummy.scale.setScalar(scale);
+          dummy.updateMatrix();
+          cards.setMatrixAt(i * 2 + k, dummy.matrix);
+          cards.setColorAt(i * 2 + k, col);
+        }
+      }
+      cards.instanceMatrix.needsUpdate = true;
+      if (cards.instanceColor) cards.instanceColor.needsUpdate = true;
+      cards.castShadow = false;
+      cards.receiveShadow = false;
+      cards.frustumCulled = false;
+      g.add(cards);
     }
-    cards.instanceMatrix.needsUpdate = true;
-    if (cards.instanceColor) cards.instanceColor.needsUpdate = true;
-    cards.castShadow = false;
-    cards.receiveShadow = false;
-    cards.frustumCulled = false;
-    g.add(cards);
+    build(M().mapleCard, 56, 0.34);   // 5-lobed 鸡爪槭 / 红枫
+    build(M().mapleCard3, 34, 0.32); // 3-lobed 枫香
   }
 
   YL.makeTree = function (opt) {
