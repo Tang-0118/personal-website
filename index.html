@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
@@ -305,7 +305,7 @@
   <div class="section__head" data-reveal>
     <span class="section__kicker">03</span>
     <h2 class="section__title">作品集</h2>
-    <p class="section__sub">六个项目：AI 质检 Copilot、车间安全防护、工业视觉质检 × 2、并行计算竞赛项目，以及一座可漫游的岳麓书院 3D 场景。往下滚动，卡片会自动叠起来。</p>
+    <p class="section__sub">五个项目：车间安全防护、工业视觉质检（含 AI Copilot）、并行计算竞赛项目，以及一座可漫游的岳麓书院 3D 场景。往下滚动，卡片会自动叠起来。</p>
   </div>
 
   <div class="stack" id="workStack">
@@ -371,11 +371,14 @@
               <span class="tag tag--award">计算机设计大赛 · 中南赛区三等奖</span>
             </span>
           </div>
-          <h3 class="project__title">包装袋封口质量在线检测系统 BAGCheck <span class="tag tag--feat">实时</span></h3>
-          <p class="project__sub">红外热成像 + 可见光双相机，在线判定封口是否合格并驱动 PLC 剔除</p>
+          <h3 class="project__title">包装袋封口质量在线检测系统 BAGCheck <span class="tag tag--feat">实时</span> <span class="tag tag--feat">AI Copilot</span></h3>
+          <p class="project__sub">红外热成像 + 可见光双相机在线判定并驱动 PLC 剔除；旁边接一层 AI，能回答「这袋为什么 NG」</p>
           <p class="project__desc">
             面向产线的实时质检系统：每个包装袋经过工位时，红外与可见光相机同步各拍一张图，两路算法各自分析后按时间戳配对融合，
             输出 OK / NG / UNKNOWN，NG 直接由 PLC 控制剔除机构踢出产线。我在项目中负责视觉算法与上位机软件的开发与调优。
+            系统上线后，操作员的下一句永远是「为什么」，于是在不改动原有相机、算法与 PLC 的前提下，我在旁边加了一层独立的
+            AI 应用层：它读取检测记录与运行日志，用工具查询拿到真实数字，再由大模型组织成操作员能听懂的话；知识类问题走检索并附出处，
+            图像类问题交给视觉模型解释。模型是可替换的一环，数字不经过它。
           </p>
           <ul class="project__points">
             <li><b>双相机同步</b>：硬件触发 + 时间戳配对聚合，任一路异常即判 UNKNOWN，避免漏检</li>
@@ -386,9 +389,14 @@
             <li><b>日志记录</b>：实时输出每条结果的 <b>时间 / IR 状态 / RGB 状态 / 综合判定 / 原因</b>，并实时统计 OK·NG·UNKNOWN 数量与合格率；日志文件与统计按天滚动留存、保留天数可配置</li>
             <li><b>证据链</b>：原图、温度矩阵、标注图、结果 JSON 全留存，配独立离线回放工具批量重跑导出</li>
             <li><b>落地</b>：Python 3.10 + PyQt5 + OpenCV，PyInstaller 打包交付，PLC 走 Modbus RTU 并带预检与 fail-safe</li>
+            <li><b>AI 层 · 八个工具 + 意图路由</b>：单袋查询、按结果筛选、按测量值排序、按超出阈值比例排序（找最接近合格的 NG）、原因分布、班次对比、连续同原因 NG 检测、知识检索；先判断「问一袋还是问一批」再选工具</li>
+            <li><b>AI 层 · 混合检索与引用</b>：BM25 与向量按 0.6 / 0.4 融合后重排取前 5，答案带出处；证据不足时明确拒答——不可答题 9 条全部正确拒答，引用有效性 1.00</li>
+            <li><b>AI 层 · 多模态边界</b>：视觉模型只被允许判断有没有露出银边，禁止评价褶皱、纹理与温度压力等工艺参数；119 例人工标注上越界评价 0 例</li>
+            <li><b>AI 层 · 三层评测</b>：221 条工具路由回归 + 64 条语义评测（事实 / 多跳 / 案例 / 不可答）+ 119 例视觉标注；据此定位并修复「含『为什么』的知识题被误判成单袋查询」的缺陷</li>
+            <li><b>AI 层 · 时延与降级</b>：重排失败熔断、向量接口超时退回纯关键词、大模型超时降级本地证据回答；端到端从 19.5 s 降到 3–5 s，模型可在本地 4B 与云端之间切换</li>
           </ul>
           <div class="project__tags">
-            <span class="tag">工业视觉</span><span class="tag">双相机融合</span><span class="tag">PyQt5</span><span class="tag">Modbus PLC</span>
+            <span class="tag">工业视觉</span><span class="tag">双相机融合</span><span class="tag">PyQt5</span><span class="tag">Modbus PLC</span><span class="tag">工具型 Agent</span><span class="tag">RAG 混合检索</span><span class="tag">多模态 VLM</span><span class="tag">FastAPI</span>
           </div>
         </div>
 
@@ -408,6 +416,16 @@
             <figure class="ui-thumb">
               <img src="assets/projects/seal-ui-config.jpg" alt="相机配置与像素标定界面"  />
               <figcaption>相机配置 · 像素标定</figcaption>
+            </figure>
+          </div>
+          <div class="ui-row">
+            <figure class="ui-thumb">
+              <img src="assets/projects/copilot-chat.png" alt="AI Copilot：回答带 Agent 轨迹，展示规划步骤、工具调用与耗时" loading="lazy" decoding="async" />
+              <figcaption>AI Copilot · Agent 轨迹</figcaption>
+            </figure>
+            <figure class="ui-thumb">
+              <img src="assets/projects/copilot-arch.svg" alt="AI 层架构：生产侧、数据入口、工具层、模型与界面" loading="lazy" decoding="async" />
+              <figcaption>AI 层分层架构</figcaption>
             </figure>
           </div>
           <div class="media__rows media__rows--light">
@@ -564,58 +582,6 @@
             </figure>
           </div>
           <p class="media__note">在线版本与本站同域部署，打开即可漫游；源码与 GLB 在 GitHub。</p>
-        </div>
-      </div>
-    </article>
-
-    <!-- 项目 6 -->
-    <article class="panel panel--project">
-      <div class="project">
-        <div class="project__body">
-          <div class="project__top">
-            <span class="project__index">06</span>
-            <span class="project__topTags">
-              <span class="tag tag--live"><i></i>产线在用</span>
-            </span>
-          </div>
-          <h3 class="project__title">工业质检 AI Copilot <span class="tag tag--feat">Agent + RAG</span></h3>
-          <p class="project__sub">在已有的封口质检系统上加一层 AI：查单袋、筛一批、算指标、读文档、看图解释，每个答案都带出处</p>
-          <p class="project__desc">
-            原来的质检系统只会给出 OK / NG，操作员的下一句永远是「为什么」。这个项目在不改动原有相机、算法、PLC 的前提下，
-            在旁边加了一个独立的 AI 应用层：读取检测记录与运行日志，用工具查询拿到真实数字，再用大模型组织成人话；
-            知识类问题走检索并附引用来源，图像类问题交给视觉模型解释。模型是可替换的一环，数字不经过它。
-          </p>
-          <ul class="project__points">
-            <li><b>八个工具 + 意图路由</b>：单袋查询、按结果筛选、按测量值排序、超出阈值比例排序（找最接近合格的 NG）、原因分布、班次对比、连续同原因 NG 检测、知识检索；先判断「你在问一袋还是一批」，再决定调哪个</li>
-            <li><b>混合检索 + 引用</b>：BM25 与向量各占 0.6 / 0.4，再重排取前 5；答案必须带出处，证据不足时明确说查不到而不是编——不可答题 9 条全部正确拒答</li>
-            <li><b>多模态边界</b>：视觉模型只被允许判断封口有没有露出银边，禁止评价褶皱、纹理与温度压力等工艺参数；119 例人工标注上越界评价 0 例</li>
-            <li><b>三层评测</b>：221 条工具路由回归 + 64 条语义评测（事实/多跳/案例/不可答）+ 119 例视觉标注；靠评测定位过一个真缺陷——含「为什么」的知识题会被误判成单袋查询</li>
-            <li><b>时延与降级</b>：重排失败熔断、向量接口超时退回纯关键词、大模型超时降级为本地方案；端到端从 19.5 s 降到 3–5 s，模型可在本地 4B 与云端之间切换</li>
-          </ul>
-          <div class="project__tags">
-            <span class="tag">工具型 Agent</span><span class="tag">RAG 混合检索</span><span class="tag">多模态 VLM</span><span class="tag">FastAPI</span><span class="tag">评测闭环</span>
-          </div>
-        </div>
-
-        <div class="project__media" data-parallax>
-          <figure class="ui-main">
-            <img src="assets/projects/copilot-chat.png" alt="工业质检 AI Copilot：回答带 Agent 轨迹，展示规划步骤、工具调用与耗时" loading="lazy" decoding="async" />
-            <figcaption>
-              <span class="chip chip--ok"><i></i>Agent 轨迹</span>
-              <span class="ui-main__txt">规划 / 工具 / 证据 / 耗时 全部可见</span>
-            </figcaption>
-          </figure>
-          <div class="ui-row">
-            <figure class="ui-thumb">
-              <img src="assets/projects/copilot-stats.png" alt="Copilot 工作台：检测统计、最近检测记录与对话区" loading="lazy" decoding="async" />
-              <figcaption>工作台 · 统计与对话</figcaption>
-            </figure>
-            <figure class="ui-thumb">
-              <img src="assets/projects/copilot-arch.svg" alt="架构图：生产侧、数据入口、工具层、模型与界面" loading="lazy" decoding="async" />
-              <figcaption>分层架构</figcaption>
-            </figure>
-          </div>
-          <p class="media__note">部署在产线工控机上，界面与检测系统同机；模型可切本地或云端。</p>
         </div>
       </div>
     </article>
