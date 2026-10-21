@@ -13,13 +13,21 @@ const os = require("os");
 const path = require("path");
 const http = require("http");
 
-const EXE = path.join(
-  process.env.LOCALAPPDATA,
-  "ms-playwright",
-  "chromium_headless_shell-1248",
-  "chrome-headless-shell-win64",
-  "chrome-headless-shell.exe",
-);
+// Playwright 缓存里的 headless shell 不一定还在；找不到就退回本机 Chrome / Edge。
+const CANDIDATES = [
+  process.env.SHOT_CHROME,
+  path.join(
+    process.env.LOCALAPPDATA,
+    "ms-playwright",
+    "chromium_headless_shell-1248",
+    "chrome-headless-shell-win64",
+    "chrome-headless-shell.exe",
+  ),
+  "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+  "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+].filter(Boolean);
+
+const EXE = CANDIDATES.find((candidate) => fs.existsSync(candidate)) || CANDIDATES[0];
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -47,7 +55,7 @@ async function main() {
   const chrome = spawn(
     EXE,
     [
-      "--headless",
+      "--headless=new",
       "--disable-gpu",
       "--no-sandbox",
       "--hide-scrollbars",
