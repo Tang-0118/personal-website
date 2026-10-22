@@ -389,14 +389,20 @@
             <li><b>日志记录</b>：实时输出每条结果的 <b>时间 / IR 状态 / RGB 状态 / 综合判定 / 原因</b>，并实时统计 OK·NG·UNKNOWN 数量与合格率；日志文件与统计按天滚动留存、保留天数可配置</li>
             <li><b>证据链</b>：原图、温度矩阵、标注图、结果 JSON 全留存，配独立离线回放工具批量重跑导出</li>
             <li><b>落地</b>：Python 3.10 + PyQt5 + OpenCV，PyInstaller 打包交付，PLC 走 Modbus RTU 并带预检与 fail-safe</li>
-            <li><b>AI 层 · 八个工具 + 意图路由</b>：单袋查询、按结果筛选、按测量值排序、按超出阈值比例排序（找最接近合格的 NG）、原因分布、班次对比、连续同原因 NG 检测、知识检索；先判断「问一袋还是问一批」再选工具</li>
+            <li><b>AI 层 · 十六个工具 + 意图路由</b>：单袋查询、按结果筛选、按测量值排序、按超出阈值比例排序（找最接近合格的 NG）、原因分布、班次对比、连续同原因 NG 检测、知识检索；先判断「问一袋还是问一批」再选工具</li>
             <li><b>AI 层 · 混合检索与引用</b>：BM25 与向量按 0.6 / 0.4 融合后重排取前 5，答案带出处；证据不足时明确拒答——不可答题 9 条全部正确拒答，引用有效性 1.00</li>
-            <li><b>AI 层 · 多模态边界</b>：视觉模型只被允许判断有没有露出银边，禁止评价褶皱、纹理与温度压力等工艺参数；119 例人工标注上越界评价 0 例</li>
-            <li><b>AI 层 · 三层评测</b>：221 条工具路由回归 + 64 条语义评测（事实 / 多跳 / 案例 / 不可答）+ 119 例视觉标注；据此定位并修复「含『为什么』的知识题被误判成单袋查询」的缺陷</li>
+            <li><b>AI 层 · 多模态边界</b>：视觉模型只被允许判断有没有露出银边，禁止评价褶皱、纹理与温度压力等工艺参数；288 例人工标注上越界评价 0 例（仅褶皱 / 工艺参数口径）</li>
+            <li><b>AI 层 · 三层评测</b>：132 条工具回归（覆盖全部 16 个工具）+ 105 条语义评测（事实 / 多跳 / 案例 / 版本 / 不可答）+ 288 例视觉标注；据此定位并修复「含『为什么』的知识题被误判成单袋查询」的缺陷</li>
             <li><b>AI 层 · 时延与降级</b>：重排失败熔断、向量接口超时退回纯关键词、大模型超时降级本地证据回答；端到端从 19.5 s 降到 3–5 s，模型可在本地 4B 与云端之间切换</li>
           </ul>
           <div class="project__tags">
             <span class="tag">工业视觉</span><span class="tag">双相机融合</span><span class="tag">PyQt5</span><span class="tag">Modbus PLC</span><span class="tag">工具型 Agent</span><span class="tag">RAG 混合检索</span><span class="tag">多模态 VLM</span><span class="tag">FastAPI</span>
+          </div>
+          <div class="project__links">
+            <a class="project-link project-link--primary" href="demo/" target="_blank" rel="noopener">
+              在线演示 AI Copilot
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 6l6 6-6 6"/></svg>
+            </a>
           </div>
         </div>
 
