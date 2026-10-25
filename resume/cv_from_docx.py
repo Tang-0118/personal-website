@@ -85,7 +85,12 @@ def parse(docx_path: str) -> dict:
                 data["name"] = text
             continue
 
-        body = text[2:].strip() if text.startswith("•") else text
+        # 手工输入的「•\t」和 Word 自动项目符号（只有「•」没有 Tab）都要兼容，
+        # 否则会把标题第一个字当成 Tab 一起吃掉。
+        if text.startswith("•"):
+            body = text[1:].lstrip("\t \u3000").strip()
+        else:
+            body = text
 
         if section == "教育背景":
             if not data["edu"] and "\t" in body:
