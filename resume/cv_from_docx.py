@@ -88,7 +88,7 @@ def parse(docx_path: str) -> dict:
         # 手工输入的「•\t」和 Word 自动项目符号（只有「•」没有 Tab）都要兼容，
         # 否则会把标题第一个字当成 Tab 一起吃掉。
         if text.startswith("•"):
-            body = text[1:].lstrip("\t \u3000").strip()
+            body = text[1:].lstrip("\t \u3000\xa0").strip()
         else:
             body = text
 
