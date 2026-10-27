@@ -24,7 +24,7 @@ Write-Output "[1/3] 读 Word 母版 → 生成网页版在线简历 cv.html"
 python (Join-Path $here "cv_from_docx.py")
 
 Write-Output "[2/3] 导出投递用 PDF（网页排版压成一页）"
-$env:PDF_SCALE = "0.85"
+$env:PDF_SCALE = "0.90"
 node $shot $url $tmp1 1440 1000 "-" light portrait
 Remove-Item Env:\PDF_SCALE -ErrorAction SilentlyContinue
 if ($LASTEXITCODE -ne 0) { throw "生成一页版失败（见上面的 node 报错）" }
