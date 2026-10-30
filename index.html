@@ -164,7 +164,7 @@
           <div class="fact"><b class="fact__num" data-count="2">2</b><span>个校企合作项目<br>已商用上线</span></div>
           <div class="fact"><b class="fact__num" data-count="2">2</b><span>个省级竞赛<br>奖项</span></div>
           <div class="fact"><b class="fact__num" data-count="1">1</b><span>篇国际会议论文<br>在审中</span></div>
-          <div class="fact"><b class="fact__num" data-count="8">8</b><span>个 Agent 工具<br>接入产线数据</span></div>
+          <div class="fact"><b class="fact__num" data-count="17">17</b><span>个 Agent 工具<br>接入产线数据</span></div>
         </div>
       </div>
 
@@ -371,14 +371,15 @@
               <span class="tag tag--award">计算机设计大赛 · 中南赛区三等奖</span>
             </span>
           </div>
-          <h3 class="project__title">包装袋封口质量在线检测系统 BAGCheck <span class="tag tag--feat">实时</span> <span class="tag tag--feat">AI Copilot</span></h3>
+          <h3 class="project__title">包装袋封口质量在线检测系统 BAGCheck <span class="tag tag--feat">实时</span> <span class="tag tag--feat">AI Copilot</span> <span class="tag tag--feat">Agentic RAG</span></h3>
           <p class="project__sub">红外热成像 + 可见光双相机在线判定并驱动 PLC 剔除；旁边接一层 AI，能回答「这袋为什么 NG」</p>
           <p class="project__desc">
             面向产线的实时质检系统：每个包装袋经过工位时，红外与可见光相机同步各拍一张图，两路算法各自分析后按时间戳配对融合，
             输出 OK / NG / UNKNOWN，NG 直接由 PLC 控制剔除机构踢出产线。我在项目中负责视觉算法与上位机软件的开发与调优。
             系统上线后，操作员的下一句永远是「为什么」，于是在不改动原有相机、算法与 PLC 的前提下，我在旁边加了一层独立的
             AI 应用层：它读取检测记录与运行日志，用工具查询拿到真实数字，再由大模型组织成操作员能听懂的话；知识类问题走检索并附出处，
-            图像类问题交给视觉模型解释。模型是可替换的一环，数字不经过它。
+            图像类问题交给视觉模型解释。模型是可替换的一环，数字不经过它。该 AI 应用层进一步升级为基于 VLM + Agentic RAG 的工业质检辅助诊断系统，
+            将检测、知识、图像与人工复核组织成可评估、可降级、可追溯的完整闭环。
           </p>
           <ul class="project__points">
             <li><b>双相机同步</b>：硬件触发 + 时间戳配对聚合，任一路异常即判 UNKNOWN，避免漏检</li>
@@ -389,14 +390,16 @@
             <li><b>日志记录</b>：实时输出每条结果的 <b>时间 / IR 状态 / RGB 状态 / 综合判定 / 原因</b>，并实时统计 OK·NG·UNKNOWN 数量与合格率；日志文件与统计按天滚动留存、保留天数可配置</li>
             <li><b>证据链</b>：原图、温度矩阵、标注图、结果 JSON 全留存，配独立离线回放工具批量重跑导出</li>
             <li><b>落地</b>：Python 3.10 + PyQt5 + OpenCV，PyInstaller 打包交付，PLC 走 Modbus RTU 并带预检与 fail-safe</li>
-            <li><b>AI 层 · 十六个工具 + 意图路由</b>：单袋查询、按结果筛选、按测量值排序、按超出阈值比例排序（找最接近合格的 NG）、原因分布、班次对比、连续同原因 NG 检测、知识检索；先判断「问一袋还是问一批」再选工具</li>
+            <li><b>AI 层 · 十七个工具 + 意图路由</b>：单袋查询、按结果筛选、按测量值排序、按超出阈值比例排序（找最接近合格的 NG）、原因分布、班次对比、连续同原因 NG 检测、知识检索；先判断「问一袋还是问一批」再选工具</li>
+            <li><b>AI 层 · VLM + Agentic RAG 辅助诊断</b>：围绕“数据同步 → 检索 → Agent 规划 → 多模态分析 → 质量门 → 人工复核”构建闭环；结合检测记录、生产日志与知识库，实现口语指代消解、时间窗口推断和多工具编排，回答附引用与可追溯的工具轨迹</li>
             <li><b>AI 层 · 混合检索与引用</b>：BM25 与向量按 0.6 / 0.4 融合后重排取前 5，答案带出处；证据不足时明确拒答——不可答题 9 条全部正确拒答，引用有效性 1.00</li>
             <li><b>AI 层 · 多模态边界</b>：视觉模型只被允许判断有没有露出银边，禁止评价褶皱、纹理与温度压力等工艺参数；288 例人工标注上越界评价 0 例（仅褶皱 / 工艺参数口径）</li>
-            <li><b>AI 层 · 三层评测</b>：132 条工具回归（覆盖全部 16 个工具）+ 105 条语义评测（事实 / 多跳 / 案例 / 版本 / 不可答）+ 288 例视觉标注；据此定位并修复「含『为什么』的知识题被误判成单袋查询」的缺陷</li>
-            <li><b>AI 层 · 时延与降级</b>：重排失败熔断、向量接口超时退回纯关键词、大模型超时降级本地证据回答；端到端从 19.5 s 降到 3–5 s，模型可在本地 4B 与云端之间切换</li>
+            <li><b>AI 层 · 质量门与人工复核</b>：JSON 产品规则引擎融合工艺窗口与 IR/RGB 通道一致性，输出自动放行或转人工复核建议；复核结论持久化并可审计，AI 建议不覆盖产线 PLC 判定</li>
+            <li><b>AI 层 · 三层评测</b>：132 条工具回归（覆盖全部 17 个工具）+ 105 条语义评测（事实 / 多跳 / 案例 / 版本 / 不可答）+ 288 例视觉标注；据此定位并修复「含『为什么』的知识题被误判成单袋查询」的缺陷</li>
+            <li><b>AI 层 · 时延与降级</b>：重排失败熔断、向量接口超时退回纯关键词、大模型超时降级本地证据回答；SSE 流式输出规划、工具调用和回答增量；端到端从 19.5 s 降到 3–5 s，模型可在本地 4B 与云端之间切换</li>
           </ul>
           <div class="project__tags">
-            <span class="tag">工业视觉</span><span class="tag">双相机融合</span><span class="tag">PyQt5</span><span class="tag">Modbus PLC</span><span class="tag">工具型 Agent</span><span class="tag">RAG 混合检索</span><span class="tag">多模态 VLM</span><span class="tag">FastAPI</span>
+            <span class="tag">工业视觉</span><span class="tag">双相机融合</span><span class="tag">PyQt5</span><span class="tag">Modbus PLC</span><span class="tag">Agentic RAG</span><span class="tag">RAG 混合检索</span><span class="tag">多模态 VLM</span><span class="tag">质量门</span><span class="tag">FastAPI</span><span class="tag">SSE</span>
           </div>
           <div class="project__links">
             <a class="project-link project-link--primary" href="demo/" target="_blank" rel="noopener">
