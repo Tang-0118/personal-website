@@ -156,7 +156,7 @@
             <li><span>学院 / 专业</span><b>计算机学院 · 智能科学与技术</b></li>
             <li><span>年级</span><b>2024 级 · 大三在读</b></li>
             <li><span>研究方向</span><b>计算机视觉 · 工业视觉 · AI 应用（Agent / RAG）</b></li>
-            <li><span>目标岗位</span><b>AI / CV</b></li>
+            <li><span>目标岗位</span><b>AI 应用 / Agent / CV</b></li>
           </ul>
         </div>
 
@@ -305,7 +305,7 @@
   <div class="section__head" data-reveal>
     <span class="section__kicker">03</span>
     <h2 class="section__title">作品集</h2>
-    <p class="section__sub">五个项目：车间安全防护、工业视觉质检（含 AI Copilot）、并行计算竞赛项目，以及一座可漫游的岳麓书院 3D 场景。往下滚动，卡片会自动叠起来。</p>
+    <p class="section__sub">五个项目：车间安全防护、基于 VLM + Agentic RAG 的工业质检辅助诊断系统、并行计算竞赛项目，以及一座可漫游的岳麓书院 3D 场景。往下滚动，卡片会自动叠起来。</p>
   </div>
 
   <div class="stack" id="workStack">
@@ -371,35 +371,27 @@
               <span class="tag tag--award">计算机设计大赛 · 中南赛区三等奖</span>
             </span>
           </div>
-          <h3 class="project__title">包装袋封口质量在线检测系统 BAGCheck <span class="tag tag--feat">实时</span> <span class="tag tag--feat">AI Copilot</span> <span class="tag tag--feat">Agentic RAG</span></h3>
-          <p class="project__sub">红外热成像 + 可见光双相机在线判定并驱动 PLC 剔除；旁边接一层 AI，能回答「这袋为什么 NG」</p>
+          <h3 class="project__title">基于 VLM + Agentic RAG 的工业质检辅助诊断系统 <span class="tag tag--feat">AI 应用</span> <span class="tag tag--feat">Agent</span></h3>
+          <p class="project__sub">部署在 IR 红外 + RGB 可见光双路封口质检产线的 AI 应用层，让操作员直接追问「这袋为什么 NG」</p>
           <p class="project__desc">
-            面向产线的实时质检系统：每个包装袋经过工位时，红外与可见光相机同步各拍一张图，两路算法各自分析后按时间戳配对融合，
-            输出 OK / NG / UNKNOWN，NG 直接由 PLC 控制剔除机构踢出产线。我在项目中负责视觉算法与上位机软件的开发与调优。
-            系统上线后，操作员的下一句永远是「为什么」，于是在不改动原有相机、算法与 PLC 的前提下，我在旁边加了一层独立的
-            AI 应用层：它读取检测记录与运行日志，用工具查询拿到真实数字，再由大模型组织成操作员能听懂的话；知识类问题走检索并附出处，
-            图像类问题交给视觉模型解释。模型是可替换的一环，数字不经过它。该 AI 应用层进一步升级为基于 VLM + Agentic RAG 的工业质检辅助诊断系统，
-            将检测、知识、图像与人工复核组织成可评估、可降级、可追溯的完整闭环。
+            面向产线操作员的多模态质检问答与缺陷归因 Copilot，建立在 BAGCheck 原红外 + 可见光检测系统之上，不改动相机、视觉算法与 PLC 控制链路。
+            应用独立接入检测记录、生产日志、知识库和证据图像，打通「数据同步 → 检索 → Agent 规划 → 多模态分析 → 质量门 → 人工复核」闭环；
+            模型负责理解问题、调度工具与组织解释，真实测量值和最终放行仍由可验证的工具与产线系统负责。
           </p>
           <ul class="project__points">
-            <li><b>双相机同步</b>：硬件触发 + 时间戳配对聚合，任一路异常即判 UNKNOWN，避免漏检</li>
-            <li><b>IR 侧量化</b>：温度、宽度、高度、面积、倾斜、局部形变与异物；异物用「局部温度参考 + MAD 自适应阈值」，比固定阈值更适应不同袋型</li>
-            <li><b>RGB 侧</b>：动态规划跟踪封口上边缘基准线 + RANSAC 拟合，抑制褶皱、银边、金属高光造成的假阳性</li>
-            <li><b>配置驱动 + 规则引擎</b>：阈值热更新，现场调参不用改代码、不用重新打包</li>
-            <li><b>数据回溯</b>：NG 图像回看页支持按 <b>OK / NG / UNKNOWN</b> + 日期时间筛选，提供「缺陷浏览 / 异常统计」双视图，逐条回看红外与可见光原图、缺陷框位置与判定原因，可翻页与导出</li>
-            <li><b>日志记录</b>：实时输出每条结果的 <b>时间 / IR 状态 / RGB 状态 / 综合判定 / 原因</b>，并实时统计 OK·NG·UNKNOWN 数量与合格率；日志文件与统计按天滚动留存、保留天数可配置</li>
-            <li><b>证据链</b>：原图、温度矩阵、标注图、结果 JSON 全留存，配独立离线回放工具批量重跑导出</li>
-            <li><b>落地</b>：Python 3.10 + PyQt5 + OpenCV，PyInstaller 打包交付，PLC 走 Modbus RTU 并带预检与 fail-safe</li>
-            <li><b>AI 层 · 十七个工具 + 意图路由</b>：单袋查询、按结果筛选、按测量值排序、按超出阈值比例排序（找最接近合格的 NG）、原因分布、班次对比、连续同原因 NG 检测、知识检索；先判断「问一袋还是问一批」再选工具</li>
-            <li><b>AI 层 · VLM + Agentic RAG 辅助诊断</b>：围绕“数据同步 → 检索 → Agent 规划 → 多模态分析 → 质量门 → 人工复核”构建闭环；结合检测记录、生产日志与知识库，实现口语指代消解、时间窗口推断和多工具编排，回答附引用与可追溯的工具轨迹</li>
-            <li><b>AI 层 · 混合检索与引用</b>：BM25 与向量按 0.6 / 0.4 融合后重排取前 5，答案带出处；证据不足时明确拒答——不可答题 9 条全部正确拒答，引用有效性 1.00</li>
-            <li><b>AI 层 · 多模态边界</b>：视觉模型只被允许判断有没有露出银边，禁止评价褶皱、纹理与温度压力等工艺参数；288 例人工标注上越界评价 0 例（仅褶皱 / 工艺参数口径）</li>
-            <li><b>AI 层 · 质量门与人工复核</b>：JSON 产品规则引擎融合工艺窗口与 IR/RGB 通道一致性，输出自动放行或转人工复核建议；复核结论持久化并可审计，AI 建议不覆盖产线 PLC 判定</li>
-            <li><b>AI 层 · 三层评测</b>：132 条工具回归（覆盖全部 17 个工具）+ 105 条语义评测（事实 / 多跳 / 案例 / 版本 / 不可答）+ 288 例视觉标注；据此定位并修复「含『为什么』的知识题被误判成单袋查询」的缺陷</li>
-            <li><b>AI 层 · 时延与降级</b>：重排失败熔断、向量接口超时退回纯关键词、大模型超时降级本地证据回答；SSE 流式输出规划、工具调用和回答增量；端到端从 19.5 s 降到 3–5 s，模型可在本地 4B 与云端之间切换</li>
+            <li><b>Agentic RAG 辅助诊断</b>：结合检测记录、生产日志与知识库，实现口语指代消解、时间窗口推断和多工具编排；围绕“数据同步 → 检索 → Agent 规划 → 多模态分析 → 质量门 → 人工复核”组织完整应用闭环，回答附引用与可追溯工具轨迹</li>
+            <li><b>十七个工具 + 意图路由</b>：根据问题理解单袋 / 批量意图并调度检测查询、指标排名、临界 NG、原因分布、班次对比、日志诊断和知识检索；先判断「问一袋还是问一批」再选工具</li>
+            <li><b>混合检索与引用</b>：BM25 与向量按 0.6 / 0.4 融合后重排取前 5，答案带出处；证据不足时明确拒答——不可答题 9 条全部正确拒答，引用有效性 1.00</li>
+            <li><b>VLM 多模态边界</b>：视觉模型结合检测指标与可见光图像解释缺陷，但只被允许判断有没有露出银边，禁止评价褶皱、纹理与温度压力等工艺参数；288 例人工标注上越界评价 0 例</li>
+            <li><b>质量门与人工复核</b>：JSON 产品规则引擎融合工艺窗口与 IR/RGB 通道一致性，输出自动放行或转人工复核建议；复核结论持久化并可审计，AI 建议不覆盖产线 PLC 判定</li>
+            <li><b>全栈数据流</b>：FastAPI + SQLAlchemy + React 工作台，支持检测记录、证据图片、知识检索、流式对话、质量门、人工复核与运营监控；SSE 输出规划、工具调用和回答增量</li>
+            <li><b>三层评测</b>：132 条工具回归（覆盖全部 17 个工具）+ 105 条语义评测（事实 / 多跳 / 案例 / 版本 / 不可答）+ 288 例视觉标注；据此定位并修复「含『为什么』的知识题被误判成单袋查询」的缺陷</li>
+            <li><b>时延与降级</b>：重排失败熔断、向量接口超时退回纯关键词、大模型超时降级本地证据回答；端到端从 19.5 s 降到 3–5 s，模型可在本地 4B 与云端之间切换</li>
+            <li><b>多源数据接入</b>：读取每条结果的 <b>时间 / IR 状态 / RGB 状态 / 综合判定 / 原因</b> 与统计日志，联合证据图片形成质检上下文；原图、温度矩阵、标注图和结果 JSON 全留存，支持离线重跑</li>
+            <li><b>底层质检支撑</b>：BAGCheck 使用硬件触发 + 时间戳配对完成双相机同步，IR 侧量化温度、宽度、高度、面积、倾斜、局部形变与异物，RGB 侧以动态规划基准线和 RANSAC 抑制褶皱、银边及金属高光误判；任一路异常降级为 UNKNOWN，PLC 走 Modbus RTU 并带 fail-safe</li>
           </ul>
           <div class="project__tags">
-            <span class="tag">工业视觉</span><span class="tag">双相机融合</span><span class="tag">PyQt5</span><span class="tag">Modbus PLC</span><span class="tag">Agentic RAG</span><span class="tag">RAG 混合检索</span><span class="tag">多模态 VLM</span><span class="tag">质量门</span><span class="tag">FastAPI</span><span class="tag">SSE</span>
+            <span class="tag">AI 应用</span><span class="tag">Agentic RAG</span><span class="tag">工具调用</span><span class="tag">混合检索</span><span class="tag">多模态 VLM</span><span class="tag">质量门</span><span class="tag">FastAPI</span><span class="tag">React</span><span class="tag">SSE</span><span class="tag">工业质检</span>
           </div>
           <div class="project__links">
             <a class="project-link project-link--primary" href="demo/" target="_blank" rel="noopener">
@@ -716,7 +708,7 @@
         <div class="tl__card">
           <h4>课题组校企合作项目 × 3 <span>视觉算法与上位机 / 移动端开发</span></h4>
           <p>由导师带领完成「无人车间人形安全防护系统」「包装袋封口质量在线检测系统」与「烟标质检助手」三个校企合作项目：封口检测系统与车间安全防护系统已商用上线，烟标质检助手已完成真机一致性验收。
-            负责视觉算法实现与调优、桌面端与鸿蒙端工程开发、算法从 PC 到手机端的移植与验收，以及多路相机实时推理调度与工控安全联锁。</p>
+            在封口质检系统基础上，进一步开发基于 VLM + Agentic RAG 的工业质检辅助诊断系统，负责视觉算法、AI 应用层、桌面端与鸿蒙端工程开发、算法移植验收，以及多路相机实时推理调度与工控安全联锁。</p>
           <div class="tl__tags"><span class="tag">2 个已商用上线</span><span class="tag">真机验收通过</span><span class="tag">软著受理</span><span class="tag">专利在审</span></div>
         </div>
       </div>
