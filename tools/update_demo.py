@@ -1,25 +1,16 @@
 """把线上演示入口接进网站：更新 BAGCheck 卡片数字 + 加「在线演示」按钮 + 生成 /demo 跳转页。"""
 
-import re
 import sys
 from pathlib import Path
 
 SITE = Path(r"E:\github_projects\personal-website")
-TUNNEL_LOG = Path(r"E:\Deepseek_projects\rag-eval\tunnel.log")
+DEFAULT_TUNNEL = "https://app.kexin.uno"
 
 
 def find_tunnel() -> str:
     if len(sys.argv) > 1 and sys.argv[1].startswith("https://"):
         return sys.argv[1].rstrip("/")
-    raw = TUNNEL_LOG.read_bytes()
-    for encoding in ("utf-8", "utf-16", "utf-16-le", "latin-1"):
-        try:
-            match = re.search(r"https://[a-z0-9-]+\.trycloudflare\.com", raw.decode(encoding, errors="ignore"))
-        except LookupError:
-            continue
-        if match:
-            return match.group(0)
-    raise SystemExit("没找到隧道地址，请把地址作为参数传进来")
+    return DEFAULT_TUNNEL
 
 
 TUNNEL = find_tunnel()
