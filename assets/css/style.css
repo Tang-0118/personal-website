@@ -483,7 +483,7 @@ main,.dock{position:relative;z-index:1}
   cursor:zoom-in;
   transition:transform .6s var(--ease),box-shadow .6s var(--ease);
 }
-.ui-main img{width:100%;display:block}
+.ui-main img{width:100%;height:auto;display:block;object-fit:contain}
 .ui-main figcaption{
   position:absolute;left:10px;top:10px;right:10px;
   display:flex;align-items:center;gap:8px;min-width:0;
@@ -500,7 +500,7 @@ main,.dock{position:relative;z-index:1}
   background:#fff;border:1px solid var(--line-soft);box-shadow:var(--shadow-sm);
   transition:transform .6s var(--ease),box-shadow .6s var(--ease);
 }
-.ui-thumb img{width:100%;display:block}
+.ui-thumb img{width:100%;height:auto;display:block;object-fit:contain}
 .ui-thumb figcaption{font-size:11px;color:var(--ink-3);padding:7px 8px;text-align:center}
 .ui-main:hover,.ui-thumb:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
 /* 浅色背景上的检测项标签 */
