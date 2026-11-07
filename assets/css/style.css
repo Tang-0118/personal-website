@@ -52,7 +52,8 @@ body{
   -webkit-font-smoothing:antialiased;
   overflow-x:clip;
 }
-img,svg{display:block;max-width:100%}
+img{display:block;max-width:100%;height:auto}
+svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 h1,h2,h3,h4{margin:0;line-height:1.2;letter-spacing:-.01em;font-weight:600}
@@ -450,7 +451,7 @@ main,.dock{position:relative;z-index:1}
 .project__media{position:relative;display:flex;flex-direction:column;gap:11px}
 .media{position:relative}
 .media__note{font-size:11.5px;line-height:1.55;color:var(--ink-3);padding-left:2px}
-.media img{display:block}
+.media img{display:block;background:linear-gradient(110deg,#f1f4f8,#e8edf4,#f1f4f8)}
 
 /* —— 热成像：双图 + 检测项 —— */
 .media--thermal{
