@@ -195,7 +195,7 @@
         <p>
           我想往计算机视觉算法和 AI 应用方向走——不只调模型，也能写工程、做界面、把大模型接进真实系统，把一件事完整地做完。
           由导师带领的三个校企合作项目里，封口检测与车间安全防护两个已商用上线（车间那套的 CPU 2 路 / GPU 4 路两套版本都在现场跑），
-          烟标质检助手完成了真机一致性验收；并行计算项目拿下了 PAC 挑战赛华南赛区一等奖。
+          烟标质检助手完成了真机一致性验收；并行计算项目拿下了第十三届 PAC 并行应用挑战赛华南赛区一等奖。
         </p>
 
         <div class="chips">
@@ -545,7 +545,7 @@
           <div class="project__top">
             <span class="project__index">05</span>
             <span class="project__topTags">
-              <span class="tag tag--live"><i></i>华南赛区一等奖</span>
+              <span class="tag tag--live"><i></i>2026 第十三届 PAC 并行应用挑战赛华南赛区一等奖</span>
             </span>
           </div>
           <h3 class="project__title">xmesh · 并行三维谱元网格生成器 <span class="tag tag--feat">并行加速</span></h3>
@@ -553,8 +553,8 @@
           <p class="project__desc">
             xmesh 为地震波传播求解器 SPECFEM3D 生成六面体谱元网格，在原生 xmeshfem3D 基础上做 MPI 并行与 Kokkos
             异构加速，并用确定性的 SFC-3D 分区（Z 加权切分 + Hilbert 曲线排序）替代 SCOTCH。
-            我负责性能剖析与优化、海光 DCU 移植，以及<b>天河与曙光两套超算上的全部实验</b>：在天河上跑实验、收数据、出图，
-            并据此修改 xmesh 源码。
+            我负责性能剖析与优化、海光 DCU 移植，并<b>主要负责国家超算长沙中心天河集群上的实验</b>：完成强扩展测试、
+            数据采集与出图，并据此修改 xmesh 源码。
           </p>
           <ul class="project__points">
             <li><b>天河 CPU 实验</b>：在国家超算长沙中心天河集群 <code>ft_module</code> 分区（aarch64、64 核/节点）完成 8/16/32/64 进程强扩展与端到端实验，网格与分区阶段稳定在 <b>3–5 s</b>，负载不平衡 <b>0.000%</b>，64 进程端到端 754 s 跑通全流程</li>
