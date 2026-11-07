@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>陈可欣 | 个人作品集 · 计算机视觉 / AI 应用</title>
-<meta name="description" content="陈可欣，湖南大学计算机学院智能科学与技术大三在读。研究方向为计算机视觉与深度学习算法落地，参与三个课题组校企合作项目（两个已商用上线）。这里是自我介绍、六个项目、兴趣爱好与个人简历。" />
+<meta name="description" content="陈可欣，湖南大学计算机学院智能科学与技术大三在读。研究方向为计算机视觉与深度学习算法落地，参与三个课题组校企合作项目（两个已商用上线）。这里是自我介绍、七个项目、兴趣爱好与个人简历。" />
 <meta name="theme-color" content="#f7f8fa" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -102,6 +102,10 @@
         <a class="btn" href="#resume">
           个人简历
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 19.5h14"/></svg>
+        </a>
+        <a class="btn" href="zhiyan/" target="_blank" rel="noopener">
+          在线体验「知言」
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5h5v5M19 5l-8 8"/><path d="M19 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4"/></svg>
         </a>
       </div>
     </div>
@@ -305,7 +309,7 @@
   <div class="section__head" data-reveal>
     <span class="section__kicker">03</span>
     <h2 class="section__title">作品集</h2>
-    <p class="section__sub">六个项目：车间安全防护、封口质检原版系统及其 VLM + Agentic RAG 辅助诊断应用、并行计算竞赛项目，以及一座可漫游的岳麓书院 3D 场景。往下滚动，卡片会自动叠起来。</p>
+    <p class="section__sub">七个项目：车间安全防护、封口质检原版系统及其 VLM + Agentic RAG 辅助诊断应用、并行计算竞赛项目、一座可漫游的岳麓书院 3D 场景，以及面向老年用户的语言认知测评应用。往下滚动，卡片会自动叠起来。</p>
   </div>
 
   <div class="stack" id="workStack">
@@ -625,6 +629,53 @@
             </figure>
           </div>
           <p class="media__note">在线版本与本站同域部署，打开即可漫游；源码与 GLB 在 GitHub。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 项目 7 -->
+    <article class="panel panel--project">
+      <div class="project">
+        <div class="project__body">
+          <div class="project__top">
+            <span class="project__index">07</span>
+            <span class="project__topTags">
+              <span class="tag tag--live"><i></i>在线体验</span>
+            </span>
+          </div>
+          <h3 class="project__title">知言 · 适老化语言认知测评 <span class="tag tag--feat">React</span></h3>
+          <p class="project__sub">为老年用户设计的大字号、高对比语言测评：看图说话、物品命名和句子复述，记录语速、停顿与表达状态</p>
+          <p class="project__desc">
+            面向老年用户的语言与认知能力测评应用。针对视力与操作习惯优化界面，提供大字号模式、高对比配色、
+            语音读题、长按录音与清晰的录音状态反馈；同时区分城市生活与农村生活两套图片题组，降低用户对陌生场景的理解成本。
+          </p>
+          <ul class="project__points">
+            <li><b>三项测评流程</b>：看图说话、物品命名与句子复述，覆盖理解、命名、组织和复述</li>
+            <li><b>适老化交互</b>：大字号模式、高对比度、语音读题与长按录音反馈</li>
+            <li><b>城乡双题组</b>：城市公园与乡村秋收两套生活化图片，评分标准保持一致</li>
+            <li><b>趋势报告</b>：展示语速、停顿、口头禅、分级结果和红黄绿健康信号灯</li>
+            <li><b>当前边界</b>：语音识别、分析和评分使用前端演示数据，后续可接入真实语音服务</li>
+          </ul>
+          <div class="project__tags">
+            <span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Vite</span><span class="tag">适老化设计</span><span class="tag">语音交互</span>
+          </div>
+          <div class="project__links">
+            <a class="project-link project-link--primary" href="zhiyan/" target="_blank" rel="noopener">
+              在线体验知言
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12.5 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="project__media" data-parallax>
+          <figure class="ui-main">
+            <img src="assets/projects/zhiyan-home.png" alt="知言适老化语言测评首页：大字号标题、城市与农村题组选择、语音测评和历史报告入口" loading="lazy" decoding="async" />
+            <figcaption>
+              <span class="chip chip--ok"><i></i>在线体验</span>
+              <span class="ui-main__txt">大字号 · 语音读题 · 城乡双题组</span>
+            </figcaption>
+          </figure>
+          <p class="media__note">当前为前端交互演示，语音识别与分析使用模拟数据；公共访问地址为 kexin.uno/zhiyan/。</p>
         </div>
       </div>
     </article>
