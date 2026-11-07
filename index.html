@@ -926,7 +926,15 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="assets/js/main.js"></script>
+<script>
+  requestAnimationFrame(function () {
+    var hero = document.querySelector('.hero');
+    var nameMask = document.querySelector('.hero__name .mask');
+    if (hero) hero.classList.add('is-in');
+    if (nameMask) nameMask.classList.add('is-in');
+  });
+</script>
+<script src="assets/js/main.js" async></script>
 <script>
   window.addEventListener('load', function () {
     function loadNeko() {
