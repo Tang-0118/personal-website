@@ -18,7 +18,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
 <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet" /></noscript>
 <link rel="stylesheet" href="assets/css/style.css" />
-<link rel="preload" as="image" href="assets/projects/copilot-chat.webp" type="image/webp" fetchpriority="high" />
+<link rel="preload" as="image" href="assets/me-hero.webp" type="image/webp" fetchpriority="high" />
+<link rel="preload" as="image" href="assets/projects/copilot-chat.webp" type="image/webp" fetchpriority="low" />
 </head>
 <body>
 
@@ -115,7 +116,7 @@
 
     <div class="hero__right">
       <figure class="photo-card">
-        <img class="photo-card__img" src="assets/me-hero.jpg" alt="陈可欣" />
+        <img class="photo-card__img" src="assets/me-hero.webp" width="900" height="697" fetchpriority="high" decoding="async" alt="陈可欣" />
         <figcaption class="photo-card__cap">陈可欣 · 2026</figcaption>
       </figure>
       <span class="float-chip float-chip--1">CV 质检</span>
@@ -154,7 +155,7 @@
       <div class="about__side">
         <div class="info-card">
           <div class="photo-frame">
-            <img class="photo-frame__img" src="assets/me-portrait.jpg" alt="陈可欣的个人照片" />
+            <img class="photo-frame__img" src="assets/me-portrait.webp" width="812" height="900" loading="lazy" decoding="async" alt="陈可欣的个人照片" />
             <span class="tape tape--l"></span>
             <span class="tape tape--r"></span>
           </div>
@@ -926,7 +927,26 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="assets/js/main.js"></script>
-<script src="assets/js/neko-ts/neko-bundle.js"></script>
-<script src="assets/js/neko-site.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    function loadNeko() {
+      var bundle = document.createElement('script');
+      bundle.src = 'assets/js/neko-ts/neko-bundle.js';
+      bundle.async = true;
+      bundle.onload = function () {
+        var site = document.createElement('script');
+        site.src = 'assets/js/neko-site.js';
+        site.async = true;
+        document.body.appendChild(site);
+      };
+      document.body.appendChild(bundle);
+    }
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadNeko, { timeout: 2500 });
+    } else {
+      setTimeout(loadNeko, 1200);
+    }
+  }, { once: true });
+</script>
 </body>
 </html>

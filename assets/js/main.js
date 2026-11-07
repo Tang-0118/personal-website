@@ -27,13 +27,18 @@
   var heroItems = $$('.hero [data-reveal]');
   heroItems.forEach(function (el, i) { el.style.setProperty('--delay', (260 + i * 100) + 'ms'); });
 
-  window.addEventListener('load', function () {
+  function revealHero() {
     setTimeout(function () {
       if (hero) hero.classList.add('is-in');
       var nameMask = $('.hero__name .mask');
       if (nameMask) nameMask.classList.add('is-in');
     }, reduce ? 0 : 120);
-  });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', revealHero, { once: true });
+  } else {
+    requestAnimationFrame(revealHero);
+  }
 
   /* ---------------- 2. 滚动出现 ---------------- */
   var revealTargets = $$('[data-reveal], .mask, .timeline, .skills');

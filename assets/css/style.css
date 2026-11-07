@@ -91,7 +91,7 @@ ul{margin:0;padding:0;list-style:none}
 }
 body.has-glow .glow{opacity:1}
 
-/* 页面底纹：白墙 + 枝叶影子（assets/bg-wall.jpg），上面再压几团白光保证文字好读 */
+/* 页面底纹：白墙 + 枝叶影子（assets/bg-wall.webp），上面再压几团白光保证文字好读 */
 .texture{
   position:fixed;inset:-10%;z-index:0;pointer-events:none;
   background:
@@ -100,7 +100,7 @@ body.has-glow .glow{opacity:1}
     radial-gradient(44% 34% at 68% 78%,rgba(255,255,255,.7),transparent 74%),
     radial-gradient(26% 22% at 30% 62%,rgba(190,205,225,.35),transparent 70%),
     radial-gradient(34% 26% at 92% 62%,rgba(196,210,232,.30),transparent 72%),
-    url("../../assets/bg-wall.jpg") center / cover no-repeat;
+    url("../../assets/bg-wall.webp") center / cover no-repeat;
   animation:drift 26s var(--ease-soft) infinite alternate;
 }
 @keyframes drift{
