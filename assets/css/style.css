@@ -149,6 +149,8 @@ main,.dock{position:relative;z-index:1}
 .section--contact{padding-bottom:60px}
 
 .section__head{max-width:660px;margin:0 0 40px}
+#about .section__head,
+#about .panel{opacity:1;transform:none;transition:none}
 .section__kicker{
   display:inline-block;font-size:12px;font-weight:600;letter-spacing:.18em;
   color:var(--accent);margin-bottom:14px;
