@@ -19,7 +19,6 @@
 <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet" /></noscript>
 <link rel="stylesheet" href="assets/css/style.css" />
 <link rel="preload" as="image" href="assets/me-hero.webp" type="image/webp" fetchpriority="high" />
-<link rel="preload" as="image" href="assets/projects/copilot-chat.webp" type="image/webp" fetchpriority="low" />
 </head>
 <body>
 
@@ -131,6 +130,14 @@
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M6.5 12.5 12 18l5.5-5.5"/></svg>
   </a>
 </header>
+<script>
+  requestAnimationFrame(function () {
+    var hero = document.querySelector('.hero');
+    var nameMask = document.querySelector('.hero__name .mask');
+    if (hero) hero.classList.add('is-in');
+    if (nameMask) nameMask.classList.add('is-in');
+  });
+</script>
 
 <!-- ==================== 流动文字带 ==================== -->
 <div class="marquee" aria-hidden="true">
@@ -470,7 +477,7 @@
 
         <div class="project__media" data-parallax>
           <figure class="ui-main">
-            <img src="assets/projects/copilot-chat.webp" width="1200" height="628" alt="AI Copilot：回答带 Agent 轨迹，展示规划步骤、工具调用与耗时" fetchpriority="high" decoding="async" />
+            <img src="assets/projects/copilot-chat.webp" width="1200" height="628" alt="AI Copilot：回答带 Agent 轨迹，展示规划步骤、工具调用与耗时" loading="lazy" decoding="async" />
             <figcaption>
               <span class="chip chip--ok"><i></i>Agent 轨迹</span>
               <span class="ui-main__txt">规划 · 工具调用 · 证据回答</span>
@@ -926,14 +933,6 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script>
-  requestAnimationFrame(function () {
-    var hero = document.querySelector('.hero');
-    var nameMask = document.querySelector('.hero__name .mask');
-    if (hero) hero.classList.add('is-in');
-    if (nameMask) nameMask.classList.add('is-in');
-  });
-</script>
 <script src="assets/js/main.js" async></script>
 <script>
   window.addEventListener('load', function () {
