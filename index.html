@@ -935,25 +935,23 @@
 
 <script src="assets/js/main.js" async></script>
 <script>
-  window.addEventListener('load', function () {
-    function loadNeko() {
-      var bundle = document.createElement('script');
-      bundle.src = 'assets/js/neko-ts/neko-bundle.js';
-      bundle.async = true;
-      bundle.onload = function () {
-        var site = document.createElement('script');
-        site.src = 'assets/js/neko-site.js';
-        site.async = true;
-        document.body.appendChild(site);
-      };
-      document.body.appendChild(bundle);
-    }
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(loadNeko, { timeout: 2500 });
-    } else {
-      setTimeout(loadNeko, 1200);
-    }
-  }, { once: true });
+  function loadNeko() {
+    var bundle = document.createElement('script');
+    bundle.src = 'assets/js/neko-ts/neko-bundle.js';
+    bundle.async = true;
+    bundle.onload = function () {
+      var site = document.createElement('script');
+      site.src = 'assets/js/neko-site.js';
+      site.async = true;
+      document.body.appendChild(site);
+    };
+    document.body.appendChild(bundle);
+  }
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(loadNeko, { timeout: 1500 });
+  } else {
+    setTimeout(loadNeko, 800);
+  }
 </script>
 </body>
 </html>
