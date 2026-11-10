@@ -1,0 +1,103 @@
+.site-stats{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  color:var(--ink-3,#7c8491);
+  font-size:12.5px;
+  line-height:1;
+}
+.site-stats[data-state="loading"]{opacity:.82}
+.site-stats[data-state="error"]{opacity:.86}
+.site-stats__views,
+.site-stats__like{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:32px;
+  color:inherit;
+  font:inherit;
+}
+.site-stats__views svg,
+.site-stats__like svg{
+  width:17px;
+  height:17px;
+  flex:none;
+}
+.site-stats__views b,
+.site-stats__like b{
+  color:var(--ink-2,#525b68);
+  font-weight:600;
+  font-variant-numeric:tabular-nums;
+}
+.site-stats__like{
+  padding:6px 13px;
+  border:1px solid rgba(185,109,58,.28);
+  border-radius:99px;
+  background:rgba(255,239,226,.9);
+  color:#9b5c32;
+  font-weight:600;
+  cursor:pointer;
+  transition:color .25s ease,background .25s ease,border-color .25s ease,transform .25s ease;
+}
+.site-stats__like:hover{
+  color:#7f4524;
+  border-color:rgba(185,109,58,.5);
+  background:#fff1e5;
+  transform:translateY(-1px);
+}
+.site-stats__like svg{
+  width:19px;
+  height:19px;
+  fill:rgba(185,109,58,.18);
+  stroke:currentColor;
+  stroke-width:1.5;
+  transition:fill .25s ease,transform .25s ease;
+}
+.site-stats__like.is-liked{
+  color:#b96d3a;
+  border-color:rgba(185,109,58,.28);
+  background:rgba(255,241,230,.82);
+}
+.site-stats__like.is-liked svg{
+  fill:currentColor;
+  stroke:currentColor;
+}
+.site-stats__like.is-popping svg{animation:siteStatsPaw .45s ease}
+.site-stats__like:disabled{cursor:wait;opacity:.65;transform:none}
+.dark .site-stats__views b,
+.dark .site-stats__like b{color:inherit}
+.dark .site-stats__like{
+  border-color:rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+}
+.dark .site-stats__like:hover{
+  border-color:rgba(255,185,130,.38);
+  background:rgba(255,255,255,.1);
+}
+.site-stats__privacy{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
+@keyframes siteStatsPaw{
+  0%{transform:rotate(-10deg) scale(.72)}
+  55%{transform:rotate(6deg) scale(1.2)}
+  100%{transform:rotate(0) scale(1)}
+}
+@media (max-width:640px){
+  .site-stats{gap:7px}
+  .site-stats__like{padding:5px 9px}
+}
+@media (prefers-reduced-motion:reduce){
+  .site-stats__like,
+  .site-stats__like svg{transition:none;animation:none!important}
+}
+@media print{
+  .site-stats{display:none!important}
+}

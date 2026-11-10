@@ -43,21 +43,34 @@
   /* ---------------- 2. 滚动出现 ---------------- */
   var revealTargets = $$('[data-reveal], .mask, .timeline, .skills');
   if ('IntersectionObserver' in window) {
+    var revealQueue = new Set();
+    var revealFrame = 0;
+    function flushReveals() {
+      revealFrame = 0;
+      var next = Array.from(revealQueue).sort(function (a, b) {
+        return a.getBoundingClientRect().top - b.getBoundingClientRect().top;
+      });
+      revealQueue.clear();
+      next.forEach(function (el, i) {
+        if (!el.style.getPropertyValue('--delay')) {
+          el.style.setProperty('--delay', Math.min(i, 7) * 80 + 'ms');
+        }
+        el.classList.add('is-in');
+        if (el.classList.contains('skills')) animateSkills(el);
+      });
+    }
+    function queueReveal(el) {
+      revealQueue.add(el);
+      if (!revealFrame) revealFrame = requestAnimationFrame(flushReveals);
+    }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
-        e.target.classList.add('is-in');
-        if (e.target.classList.contains('skills')) animateSkills(e.target);
-        if (e.target.classList.contains('timeline')) { /* 时间轴线条自动展开 */ }
         io.unobserve(e.target);
+        queueReveal(e.target);
       });
     }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
-    revealTargets.forEach(function (el, i) {
-      if (!el.style.getPropertyValue('--delay')) {
-        el.style.setProperty('--delay', ((i % 4) * 90) + 'ms');
-      }
-      io.observe(el);
-    });
+    revealTargets.forEach(function (el) { io.observe(el); });
   } else {
     revealTargets.forEach(function (el) { el.classList.add('is-in'); });
     $$('.skills').forEach(animateSkills);
