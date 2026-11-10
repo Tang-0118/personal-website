@@ -1,10 +1,22 @@
 .site-stats{
+  position:fixed;
+  left:18px;
+  bottom:18px;
+  z-index:1490;
   display:inline-flex;
   align-items:center;
   gap:10px;
+  padding:7px 9px 7px 13px;
+  border:1px solid rgba(15,23,42,.1);
+  border-radius:999px;
+  background:rgba(255,255,255,.94);
+  box-shadow:0 8px 24px -10px rgba(15,23,42,.3);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
   color:var(--ink-3,#7c8491);
   font-size:12.5px;
   line-height:1;
+  white-space:nowrap;
 }
 .site-stats[data-state="loading"]{opacity:.82}
 .site-stats[data-state="error"]{opacity:.86}
@@ -17,6 +29,7 @@
   color:inherit;
   font:inherit;
 }
+.site-stats__views > span{min-width:72px}
 .site-stats__views svg,
 .site-stats__like svg{
   width:17px;
@@ -25,6 +38,9 @@
 }
 .site-stats__views b,
 .site-stats__like b{
+  display:inline-block;
+  min-width:1.2em;
+  text-align:right;
   color:var(--ink-2,#525b68);
   font-weight:600;
   font-variant-numeric:tabular-nums;
@@ -43,7 +59,6 @@
   color:#7f4524;
   border-color:rgba(185,109,58,.5);
   background:#fff1e5;
-  transform:translateY(-1px);
 }
 .site-stats__like svg{
   width:19px;
@@ -91,6 +106,11 @@
   100%{transform:rotate(0) scale(1)}
 }
 @media (max-width:640px){
+  .site-stats{
+    left:12px;
+    bottom:82px;
+    padding:6px 7px 6px 11px;
+  }
   .site-stats{gap:7px}
   .site-stats__like{padding:5px 9px}
 }
