@@ -48,11 +48,13 @@
     widget.dataset.state = "ready";
   }
 
+  var likeInteracted = false;
   function bindLikes(widget, key) {
     var button = widget.querySelector("[data-stat-like]");
     if (!button) return;
     button.addEventListener("click", function () {
       if (button.disabled) return;
+      likeInteracted = true;
       var willLike = !button.classList.contains("is-liked");
       button.disabled = true;
       request(key + "/like", { method: willLike ? "POST" : "DELETE" })
@@ -67,6 +69,8 @@
         })
         .catch(function () {
           button.title = "猫爪暂时没有回应，请稍后再试";
+          var label = widget.querySelector("[data-stat-like-label]");
+          if (label) label.textContent = "再试一次";
         })
         .finally(function () {
           button.disabled = false;
@@ -74,29 +78,30 @@
     });
   }
 
-  function start() {
-    if (window.location.protocol === "file:") return;
-    if (navigator.doNotTrack === "1" || window.doNotTrack === "1") return;
-    var key = pageKey();
-    if (!key) return;
+  var statsEnabled = window.location.protocol !== "file:" &&
+    navigator.doNotTrack !== "1" && window.doNotTrack !== "1";
+  var currentKey = statsEnabled ? pageKey() : "";
+  var widget = currentKey ? document.querySelector("[data-site-stats]") : null;
+  if (widget) bindLikes(widget, currentKey);
 
-    var widget = document.querySelector("[data-site-stats]");
-    var viewKey = "kx-view:" + key;
+  function start() {
+    if (!currentKey) return;
+    var viewKey = "kx-view:" + currentKey;
     var lastView = 0;
     try { lastView = Number(sessionStorage.getItem(viewKey)) || 0; } catch (error) {}
     var shouldCount = Date.now() - lastView > VIEW_TTL;
 
     var task = shouldCount
-      ? request(key + "/view", { method: "POST" })
-      : request(key);
+      ? request(currentKey + "/view", { method: "POST" })
+      : request(currentKey);
 
     task.then(function (stats) {
       if (shouldCount) {
         try { sessionStorage.setItem(viewKey, String(Date.now())); } catch (error) {}
       }
-      if (widget) render(widget, stats);
+      if (widget && !likeInteracted) render(widget, stats);
     }).catch(function () {
-      if (!widget) return;
+      if (!widget || likeInteracted) return;
       var views = widget.querySelector("[data-stat-views]");
       var likes = widget.querySelector("[data-stat-likes]");
       var likeLabel = widget.querySelector("[data-stat-like-label]");
@@ -106,7 +111,6 @@
       widget.dataset.state = "error";
     });
 
-    if (widget) bindLikes(widget, key);
   }
 
   function schedule() {
