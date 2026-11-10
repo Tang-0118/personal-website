@@ -1,12 +1,12 @@
 /*!
  * neko-site.js — 个人站小猫挂件
  * ------------------------------------------------------------------
- * 基于本地打包的 neko-ts（MIT，见 ./neko-ts/neko-bundle.js，精灵图全部内嵌 base64，
+ * 基于本地打包的 neko-ts（MIT，见 ./neko-ts/neko-bundle-lite.js，精灵图全部内嵌 base64，
  * 无任何外部 CDN 依赖）。经典脚本，file:// 双击打开、本地服务器、GitHub Pages 均可用。
  *
  * 功能：
  *   1. 一只跟着鼠标跑的小猫（桌面端），触屏端则原地待机；
- *   2. 右下角「换花色」按钮：弹出 35 种预设花色，点击即换、自动记住选择；
+ *   2. 右下角「换花色」按钮：首次打开时才加载其余花色，点击即换、自动记住选择；
  *   3. 系统开启「减弱动态效果」时，库内部不会创建小猫，选择器也随之隐藏。
  */
 (function () {
@@ -14,10 +14,10 @@
 
   var Neko = window.Neko;
   var NekoSizeVariations = window.NekoSizeVariations;
-  var breedMap = window.nekoBreeds;
-  if (!Neko || !NekoSizeVariations || !breedMap) return; // 库未加载时静默退出
+  if (!Neko || !NekoSizeVariations || !window.nekoBreeds) return; // 库未加载时静默退出
 
   var STORAGE_KEY = "neko-breed";
+  var BREED_CONFIG_KEY = "neko-breed-config";
   var DEFAULT_BREED = "spirit";
   var BREEDS = [
     "ace", "air", "black", "blue", "calico", "colourful", "dave", "dog", "earth", "fancy",
@@ -32,14 +32,31 @@
   function writeSaved(name) {
     try { localStorage.setItem(STORAGE_KEY, name); } catch (e) { /* 隐私模式等场景忽略 */ }
   }
+  function readSavedConfig(name) {
+    if (!name) return null;
+    try {
+      var value = JSON.parse(localStorage.getItem(BREED_CONFIG_KEY) || "null");
+      if (!value || value.name !== name || !value.config) return null;
+      return value.config;
+    } catch (e) {
+      return null;
+    }
+  }
+  function writeSavedConfig(name, config) {
+    try {
+      localStorage.setItem(BREED_CONFIG_KEY, JSON.stringify({ name: name, config: config }));
+    } catch (e) { /* 隐私模式等场景忽略 */ }
+  }
 
   var saved = readSaved();
-  var initial = breedMap[saved] ? saved : DEFAULT_BREED;
+  var savedConfig = readSavedConfig(saved);
+  if (saved && savedConfig) window.nekoBreeds[saved] = savedConfig;
+  var initial = window.nekoBreeds[saved] ? saved : DEFAULT_BREED;
 
   // 构造小猫。origin 放在页面右下角附近；系统开启「减弱动态效果」时
   // 库内部不会创建 DOM，此时 document.querySelector("[data-neko]") 为 null。
   var neko = new Neko({
-    breed: breedMap[initial],
+    breed: window.nekoBreeds[initial],
     nekoSize: NekoSizeVariations.MEDIUM,
     speed: 10,
     origin: {
@@ -74,6 +91,7 @@
     ".nk-panel__cur{font-size:12px;color:#64748b;font-variant-numeric:tabular-nums;}",
     ".nk-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;",
     "padding:14px;overflow-y:auto;}",
+    ".nk-loading{grid-column:1/-1;padding:22px 10px;text-align:center;font-size:12px;color:#64748b;}",
     ".nk-swatch{position:relative;aspect-ratio:1;border:1px solid rgba(15,23,42,.08);",
     "border-radius:10px;background-color:#f8fafc;cursor:pointer;padding:0;image-rendering:pixelated;",
     "transition:transform .12s ease,border-color .12s ease,box-shadow .12s ease;}",
@@ -135,12 +153,15 @@
   }
 
   function setActiveBreed(name, silent) {
-    var conf = breedMap[name];
+    var conf = window.nekoBreeds[name];
     if (!conf) return;
     neko.setBreed(conf);
     active = name;
     cur.textContent = name;
-    if (!silent) writeSaved(name);
+    if (!silent) {
+      writeSaved(name);
+      writeSavedConfig(name, conf);
+    }
     var swatches = grid.querySelectorAll(".nk-swatch");
     for (var i = 0; i < swatches.length; i++) {
       var el = swatches[i];
@@ -150,8 +171,16 @@
     }
   }
 
-  for (var i = 0; i < BREEDS.length; i++) {
-    (function (name) {
+  function hasFullBreeds() {
+    var map = window.nekoBreeds || {};
+    return BREEDS.every(function (name) { return Boolean(map[name]); });
+  }
+
+  function renderBreedGrid() {
+    grid.innerHTML = "";
+    var map = window.nekoBreeds || {};
+    BREEDS.forEach(function (name) {
+      if (!map[name]) return;
       var b = document.createElement("button");
       b.type = "button";
       b.className = "nk-swatch";
@@ -159,11 +188,28 @@
       b.title = name;
       b.setAttribute("aria-label", "花色：" + name);
       b.setAttribute("aria-pressed", name === active ? "true" : "false");
-      b.style.cssText = swatchStyle(breedMap[name], 32);
+      b.style.cssText = swatchStyle(map[name], 32);
       b.addEventListener("click", function () { setActiveBreed(name); });
       grid.appendChild(b);
-    })(BREEDS[i]);
+    });
   }
+
+  var fullBundlePromise = null;
+  function loadFullBreeds() {
+    if (hasFullBreeds()) return Promise.resolve();
+    if (fullBundlePromise) return fullBundlePromise;
+    fullBundlePromise = new Promise(function (resolve, reject) {
+      var script = document.createElement("script");
+      script.src = "assets/js/neko-ts/neko-bundle.js";
+      script.async = true;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+    return fullBundlePromise;
+  }
+
+  renderBreedGrid();
 
   /* ---------------- 开关与关闭逻辑 ---------------- */
   function setOpen(force) {
@@ -172,7 +218,13 @@
   }
   toggle.addEventListener("click", function (e) {
     e.stopPropagation();
-    setOpen(!picker.classList.contains("is-open"));
+    var opening = !picker.classList.contains("is-open");
+    setOpen(opening);
+    if (!opening || hasFullBreeds()) return;
+    grid.innerHTML = '<span class="nk-loading">正在加载花色…</span>';
+    loadFullBreeds().then(renderBreedGrid).catch(function () {
+      grid.innerHTML = '<span class="nk-loading">花色加载失败，请稍后再试</span>';
+    });
   });
   document.addEventListener("click", function (e) {
     if (!picker.contains(e.target)) setOpen(false);
