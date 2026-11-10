@@ -20,6 +20,8 @@
 <link rel="stylesheet" href="assets/css/style.css" />
 <link rel="stylesheet" href="assets/css/site-stats.css" />
 <link rel="preload" as="image" href="assets/me-hero.webp" type="image/webp" fetchpriority="high" />
+<script src="assets/js/neko-ts/neko-bundle.js" defer></script>
+<script src="assets/js/neko-site.js" defer></script>
 </head>
 <body>
 
@@ -911,18 +913,20 @@
       <span class="mask"><span class="mask__in footer__big--soft" data-reveal>Keep curious. Ship things.</span></span>
     </h2>
     <div class="footer__meta">
-      <span>© 2026 陈可欣</span>
-      <div class="site-stats" data-site-stats data-page="home" data-state="loading">
-        <span class="site-stats__views" title="本页累计浏览">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 12s3.4-6.2 9.5-6.2S21.5 12 21.5 12 18.1 18.2 12 18.2 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.6"/></svg>
-          <span><b data-stat-views>—</b> 次浏览</span>
-        </span>
-        <button class="site-stats__like" type="button" data-stat-like aria-pressed="false" aria-label="留下猫爪点赞">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="15.2" rx="4.8" ry="4.1"/><ellipse cx="5.4" cy="10.2" rx="2" ry="2.7" transform="rotate(-18 5.4 10.2)"/><ellipse cx="9.2" cy="6.4" rx="2" ry="2.8" transform="rotate(-7 9.2 6.4)"/><ellipse cx="14.8" cy="6.4" rx="2" ry="2.8" transform="rotate(7 14.8 6.4)"/><ellipse cx="18.6" cy="10.2" rx="2" ry="2.7" transform="rotate(18 18.6 10.2)"/></svg>
-          <b data-stat-likes>—</b>
-          <span data-stat-like-label>踩个猫爪</span>
-        </button>
-        <span class="site-stats__privacy">仅统计公开页面的匿名访问量，不用于广告画像。</span>
+      <div class="footer__meta-start">
+        <div class="site-stats" data-site-stats data-page="home" data-state="loading">
+          <span class="site-stats__views" title="本页累计浏览">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 12s3.4-6.2 9.5-6.2S21.5 12 21.5 12 18.1 18.2 12 18.2 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.6"/></svg>
+            <span><b data-stat-views>—</b> 次浏览</span>
+          </span>
+          <button class="site-stats__like" type="button" data-stat-like aria-pressed="false" aria-label="留下猫爪点赞">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="15.2" rx="4.8" ry="4.1"/><ellipse cx="5.4" cy="10.2" rx="2" ry="2.7" transform="rotate(-18 5.4 10.2)"/><ellipse cx="9.2" cy="6.4" rx="2" ry="2.8" transform="rotate(-7 9.2 6.4)"/><ellipse cx="14.8" cy="6.4" rx="2" ry="2.8" transform="rotate(7 14.8 6.4)"/><ellipse cx="18.6" cy="10.2" rx="2" ry="2.7" transform="rotate(18 18.6 10.2)"/></svg>
+            <b data-stat-likes>—</b>
+            <span data-stat-like-label>踩个猫爪</span>
+          </button>
+          <span class="site-stats__privacy">仅统计公开页面的匿名访问量，不用于广告画像。</span>
+        </div>
+        <span>© 2026 陈可欣</span>
       </div>
       <button class="to-top" id="toTop" type="button">
         回到顶部
@@ -948,24 +952,5 @@
 
 <script src="assets/js/main.js" async></script>
 <script src="assets/js/site-stats.js" defer></script>
-<script>
-  function loadNeko() {
-    var bundle = document.createElement('script');
-    bundle.src = 'assets/js/neko-ts/neko-bundle.js';
-    bundle.async = true;
-    bundle.onload = function () {
-      var site = document.createElement('script');
-      site.src = 'assets/js/neko-site.js';
-      site.async = true;
-      document.body.appendChild(site);
-    };
-    document.body.appendChild(bundle);
-  }
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(loadNeko, { timeout: 1500 });
-  } else {
-    setTimeout(loadNeko, 800);
-  }
-</script>
 </body>
 </html>

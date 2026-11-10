@@ -783,6 +783,9 @@ img.gphoto__img{object-fit:cover;object-position:center;background:none}
   margin-top:56px;padding-top:22px;border-top:1px solid var(--line-soft);
   font-size:12.5px;color:var(--ink-3);
 }
+.footer__meta-start{
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+}
 .to-top{display:inline-flex;align-items:center;gap:7px;color:var(--ink-2);font-size:13px;font-weight:500}
 .to-top svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;transition:transform .35s var(--ease)}
 .to-top:hover{color:var(--ink)}
