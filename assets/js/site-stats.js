@@ -57,6 +57,8 @@
       likeInteracted = true;
       var willLike = !button.classList.contains("is-liked");
       button.disabled = true;
+      var pendingLabel = widget.querySelector("[data-stat-like-label]");
+      if (pendingLabel) pendingLabel.textContent = "正在记录…";
       request(key + "/like", { method: willLike ? "POST" : "DELETE" })
         .then(function (stats) {
           render(widget, stats);
