@@ -386,7 +386,7 @@
     }
     function srcOf(node) {
       var el = mediaNode(node);
-      if (el.tagName === 'IMG') return el.currentSrc || el.src || '';
+      if (el.tagName === 'IMG') return el.dataset.full || el.currentSrc || el.src || '';
       var bg = window.getComputedStyle(el).backgroundImage || '';
       var m = /url\(["']?(.*?)["']?\)/.exec(bg);
       return m ? m[1] : '';
@@ -407,9 +407,11 @@
       lbCap.textContent = capOf(el);
       lastFocus = document.activeElement;
       lightbox.hidden = false;
+      lightbox.classList.add('is-loading');
       document.documentElement.classList.add('lb-open');
 
       var settle = function () {
+        lightbox.classList.remove('is-loading');
         // 原图较小的话按上限放大显示，避免弹出来还是一张小图
         var natW = lbImg.naturalWidth || lbImg.width || 0;
         var natH = lbImg.naturalHeight || lbImg.height || 0;
@@ -440,6 +442,7 @@
 
       if (lbImg.complete && lbImg.naturalWidth) requestAnimationFrame(settle);
       else lbImg.onload = function () { requestAnimationFrame(settle); };
+      lbImg.onerror = function () { lightbox.classList.remove('is-loading'); };
       lbClose.focus();
     }
 
